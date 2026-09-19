@@ -25954,6 +25954,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'cancel-add-tag-btn'
         ];
 
+        closeIds.push('close-public-member-register-modal');
+
         closeIds.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -25972,6 +25974,148 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Setup Public Member Registration from Login View
+    const setupPublicMemberRegistration = () => {
+        const btnOpen = document.getElementById('btn-open-member-register');
+        const modal = document.getElementById('public-member-register-modal');
+        const btnClose = document.getElementById('close-public-member-register-modal');
+        const linkLogin = document.getElementById('pub-reg-switch-to-login');
+        const form = document.getElementById('public-member-register-form');
+        const errDiv = document.getElementById('pub-reg-error');
+        const succDiv = document.getElementById('pub-reg-success');
+        const submitBtn = document.getElementById('pub-reg-submit-btn');
+
+        if (btnOpen && modal) {
+            btnOpen.addEventListener('click', () => {
+                if (errDiv) { errDiv.style.display = 'none'; errDiv.textContent = ''; }
+                if (succDiv) { succDiv.style.display = 'none'; succDiv.textContent = ''; }
+                if (form) form.reset();
+                modal.style.display = 'flex';
+                const userField = document.getElementById('pub-reg-username');
+                if (userField) setTimeout(() => userField.focus(), 100);
+            });
+        }
+
+        const closeModal = () => {
+            if (modal) modal.style.display = 'none';
+        };
+
+        if (btnClose) btnClose.addEventListener('click', closeModal);
+        if (linkLogin) {
+            linkLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal();
+                const userInp = document.getElementById('username-input');
+                if (userInp) userInp.focus();
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (errDiv) { errDiv.style.display = 'none'; errDiv.textContent = ''; }
+                if (succDiv) { succDiv.style.display = 'none'; succDiv.textContent = ''; }
+
+                const username = document.getElementById('pub-reg-username')?.value?.trim();
+                const password = document.getElementById('pub-reg-password')?.value;
+                const confirmPassword = document.getElementById('pub-reg-confirm-password')?.value;
+                const firstName = document.getElementById('pub-reg-firstname')?.value?.trim();
+                const lastName = document.getElementById('pub-reg-lastname')?.value?.trim();
+                const phone = document.getElementById('pub-reg-phone')?.value?.trim();
+                const tag = document.getElementById('pub-reg-tag')?.value?.trim();
+
+                if (!username || !password) {
+                    if (errDiv) {
+                        errDiv.textContent = 'กรุณากรอก Username และรหัสผ่านให้ครบถ้วน';
+                        errDiv.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (username.length < 3) {
+                    if (errDiv) {
+                        errDiv.textContent = 'Username ต้องมีอย่างน้อย 3 ตัวอักษร';
+                        errDiv.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (password.length < 6) {
+                    if (errDiv) {
+                        errDiv.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+                        errDiv.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    if (errDiv) {
+                        errDiv.textContent = 'รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน';
+                        errDiv.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span>⏳ กำลังลงทะเบียน...</span>';
+                }
+
+                try {
+                    const res = await fetch('/api/member-register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username,
+                            password,
+                            firstName,
+                            lastName,
+                            phone,
+                            tag
+                        })
+                    });
+
+                    const resData = await res.json();
+                    if (!res.ok) {
+                        throw new Error(resData.error || 'เกิดข้อผิดพลาดในการลงทะเบียน');
+                    }
+
+                    if (succDiv) {
+                        succDiv.textContent = resData.message || 'สมัครสมาชิกสำเร็จ! เข้าสู่ระบบได้ทันที';
+                        succDiv.style.display = 'block';
+                    }
+
+                    if (typeof Notify !== 'undefined' && Notify.success) {
+                        Notify.success('สมัครสมาชิกสำเร็จ', `ยินดีต้อนรับคุณ ${username}`);
+                    }
+
+                    const loginUsername = document.getElementById('username-input');
+                    const loginPassword = document.getElementById('password-input');
+                    if (loginUsername) loginUsername.value = username;
+
+                    setTimeout(() => {
+                        closeModal();
+                        if (loginPassword) loginPassword.focus();
+                    }, 1200);
+
+                } catch (err) {
+                    if (errDiv) {
+                        errDiv.textContent = err.message;
+                        errDiv.style.display = 'block';
+                    }
+                    if (typeof Notify !== 'undefined' && Notify.error) {
+                        Notify.error('สมัครสมาชิกล้มเหลว', err.message);
+                    }
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<span>🚀 ยืนยันการสมัครสมาชิก</span>';
+                    }
+                }
+            });
+        }
+    };
+
     // Initialize Member Module
     const initMemberModule = () => {
         ensureMemberMenuOrder();
@@ -25979,6 +26123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupCreditAdjustmentListeners();
         setupAddMemberForm();
         setupMemberModalCloseHandlers();
+        setupPublicMemberRegistration();
     };
 
     // Call init when DOM is ready

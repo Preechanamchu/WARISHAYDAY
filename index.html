@@ -41,7 +41,7 @@
         href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600&family=Chakra+Petch:wght@300;400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Inter:wght@500;600;700&family=Kanit:wght@300;400;500;600&family=Mali:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&family=Taviraj:wght@300;400;500;600&family=Trirong:wght@300;400;500;600&family=Lilita+One&family=Mitr:wght@400;500;600&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=member2.0">
+    <link rel="stylesheet" href="style.css?v=member2.1">
     <link rel="stylesheet" href="premium-feedback.css">
     <link rel="stylesheet" href="success-animations.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -607,15 +607,21 @@
                             <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                             <span>เข้าสู่ระบบ</span>
                         </button>
-                        <button id="back-to-customer-view-btn" class="btn btn-back-premium"
-                            data-translate-key="backToShopBtn">
-                            <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                            <span>กลับหน้าหลัก</span>
+                        <button id="btn-open-member-register" class="btn btn-register-member-premium" type="button">
+                            <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                            <span>สมัครสมาชิก</span>
                         </button>
                     </div>
-                    <div class="register-button-center">
-                        <button id="register-btn" class="btn btn-orange"
-                            data-translate-key="registerBtn">สมัครใช้งานระบบ</button>
+                    <div class="login-sub-actions" style="margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
+                        <button id="back-to-customer-view-btn" class="btn btn-back-premium"
+                            data-translate-key="backToShopBtn" style="width: 100%; max-width: 400px;">
+                            <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            <span>กลับหน้าร้าน</span>
+                        </button>
+                        <div class="register-button-center" style="display: none;">
+                            <button id="register-btn" class="btn btn-orange"
+                                data-translate-key="registerBtn">สมัครใช้งานระบบ</button>
+                        </div>
                     </div>
                 </div>
                 <!-- ===== END: Login Button Structural Update ===== -->
@@ -2941,7 +2947,7 @@
                             <div class="chart-panel-v2">
                                 <div class="panel-header-v2">
                                     <h3 class="panel-title-v2">📈 กราฟสมาชิกใหม่</h3>
-                                    <select id="member-chart-timeframe" class="date-picker-v2">
+                                    <select id="member-chart-timeframe" class="date-picker-v2 member-header-select">
                                         <option value="today">วันนี้</option>
                                         <option value="7days">7 วัน</option>
                                         <option value="30days" selected>30 วัน</option>
@@ -2958,7 +2964,7 @@
                             <div class="chart-panel-v2">
                                 <div class="panel-header-v2">
                                     <h3 class="panel-title-v2">🛍️ กราฟยอดสั่งซื้อของสมาชิก</h3>
-                                    <select id="member-orders-chart-timeframe" class="date-picker-v2">
+                                    <select id="member-orders-chart-timeframe" class="date-picker-v2 member-header-select">
                                         <option value="today">วันนี้</option>
                                         <option value="7days">7 วัน</option>
                                         <option value="30days" selected>30 วัน</option>
@@ -2975,11 +2981,11 @@
                         <!-- Top 10 Members Table -->
                         <div class="chart-panel-v2 full-width" style="margin-top: 24px;">
                             <div class="panel-header-v2">
-                                <div>
+                                <div class="panel-title-group-v2">
                                     <h3 class="panel-title-v2">⭐ Top 10 Members — สมาชิกยอดสั่งซื้อสูงสุด</h3>
-                                    <small style="color: #888;">คลิกที่สมาชิกเพื่อดูรายละเอียด</small>
+                                    <small class="panel-subtitle-v2" style="color: #888;">คลิกที่สมาชิกเพื่อดูรายละเอียด</small>
                                 </div>
-                                <select id="top10-timeframe" class="date-picker-v2">
+                                <select id="top10-timeframe" class="date-picker-v2 member-header-select">
                                     <option value="thisMonth" selected>เดือนนี้</option>
                                     <option value="today">วันนี้</option>
                                     <option value="7days">7 วัน</option>
@@ -3018,10 +3024,13 @@
                         <!-- Search & Filter Controls -->
                         <div class="member-filter-card">
                             <div class="member-filter-row">
-                                <div class="member-search-group">
-                                    <span class="search-icon">🔍</span>
-                                    <input type="text" id="member-search-input" class="form-control" placeholder="ค้นหาสมาชิก... ID, Username, ชื่อ, เบอร์โทร, Tag">
-                                    <button class="btn btn-secondary btn-small" id="member-search-clear-btn" style="display: none;">✕</button>
+                                <div class="member-filter-group">
+                                    <label>🔍 ค้นหาสมาชิก:</label>
+                                    <div class="member-search-group">
+                                        <span class="search-icon">🔍</span>
+                                        <input type="text" id="member-search-input" class="form-control" placeholder="ค้นหา ID, Username, ชื่อ, เบอร์, Tag...">
+                                        <button class="btn btn-secondary btn-small" id="member-search-clear-btn" style="display: none;">✕</button>
+                                    </div>
                                 </div>
                                 <div class="member-filter-group">
                                     <label>สถานะ:</label>
@@ -6344,6 +6353,62 @@
             </div>
         </div>
     </div>
+
+    <!-- 6. Public Member Registration Modal -->
+    <div id="public-member-register-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 480px; width: 92%; border-radius: 20px; padding: 28px 24px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.25);">
+            <span class="close-modal" id="close-public-member-register-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8; line-height: 1;">&times;</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 2.2rem; margin-bottom: 6px;">✨</div>
+                <h3 style="margin: 0; font-size: 1.35rem; color: var(--text-color); font-weight: 700;">สมัครสมาชิก</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.88rem;">สมัครสมาชิกเพื่อสะสมเครดิตและรับสิทธิพิเศษมากมาย</p>
+            </div>
+            <form id="public-member-register-form">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label for="pub-reg-username" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">Username (ชื่อผู้ใช้) <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="pub-reg-username" class="form-control" placeholder="ชื่อผู้ใช้สำหรับเข้าสู่ระบบ (เช่น waris01)" required minlength="3" autocomplete="username">
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="pub-reg-password" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">รหัสผ่าน <span style="color: #ef4444;">*</span></label>
+                        <input type="password" id="pub-reg-password" class="form-control" placeholder="อย่างน้อย 6 ตัวอักษร" required minlength="6" autocomplete="new-password">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="pub-reg-confirm-password" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">ยืนยันรหัสผ่าน <span style="color: #ef4444;">*</span></label>
+                        <input type="password" id="pub-reg-confirm-password" class="form-control" placeholder="ยืนยันรหัสผ่าน" required minlength="6" autocomplete="new-password">
+                    </div>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="pub-reg-firstname" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">ชื่อ</label>
+                        <input type="text" id="pub-reg-firstname" class="form-control" placeholder="ชื่อจริง">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="pub-reg-lastname" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">นามสกุล</label>
+                        <input type="text" id="pub-reg-lastname" class="form-control" placeholder="นามสกุล">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label for="pub-reg-phone" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">เบอร์โทรศัพท์</label>
+                    <input type="tel" id="pub-reg-phone" class="form-control" placeholder="08x-xxx-xxxx" autocomplete="tel">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="pub-reg-tag" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">🌾 Hay Day Player Tag (แท็กฟาร์ม)</label>
+                    <input type="text" id="pub-reg-tag" class="form-control" placeholder="เช่น LJV8U8QGU (ไม่ใส่ก็ได้)" style="text-transform: uppercase;">
+                    <small style="color: #94a3b8; font-size: 0.76rem; display: block; margin-top: 4px;">ใช้สำหรับยืนยันและเติมสินค้าในเกม Hay Day โดยอัตโนมัติ</small>
+                </div>
+                <div id="pub-reg-error" style="display: none; color: #ef4444; background: #fee2e2; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
+                <div id="pub-reg-success" style="display: none; color: #059669; background: #d1fae5; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
+                <button type="submit" id="pub-reg-submit-btn" class="btn btn-register-member-premium" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">
+                    <span>🚀 ยืนยันการสมัครสมาชิก</span>
+                </button>
+                <div style="text-align: center; margin-top: 14px;">
+                    <a href="#" id="pub-reg-switch-to-login" style="color: #0284c7; text-decoration: none; font-size: 0.88rem; font-weight: 600;">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ===== END: Member Management Modals ===== -->
 
 
@@ -6370,7 +6435,7 @@
         });
     </script>
 
-    <script src="script.js?v=member2.0" defer></script>
+    <script src="script.js?v=member2.1" defer></script>
 </body>
 
 </html>
