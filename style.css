@@ -1,6 +1,9 @@
 :root {
     --primary-color: #28a745;
     --primary-color-rgb: 40, 167, 69;
+    --primary-color-light: #48c765;
+    --primary-color-soft: rgba(40, 167, 69, 0.12);
+    --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
     --secondary-color: #ffc107;
     --background-color: #f0f2f5;
     --surface-color: #ffffff;
@@ -28362,18 +28365,18 @@ body.dark-mode .premium-category-title {
     font-size: 1rem;
   font-weight: 800;
   text-align: center;
-  background: linear-gradient(45deg, #1e3c72, #2a5298);
+  background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
   margin: 15px 0 25px 0;
   letter-spacing: 1px;
 }
 body.dark-mode #current-category-name {
-  background: linear-gradient(45deg, #4facfe, #00f2fe);
+  background: linear-gradient(45deg, var(--primary-color-light), #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(2px 4px 8px rgba(0,242,254,0.4));
+  filter: drop-shadow(2px 4px 8px rgba(var(--primary-color-rgb), 0.4));
 }
 
 /* ===== TAG INPUT BLINKING PLACEHOLDER ===== */

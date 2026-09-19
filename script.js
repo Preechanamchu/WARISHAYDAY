@@ -1796,8 +1796,27 @@ document.addEventListener('DOMContentLoaded', () => {
             root.style.setProperty('--primary-color', theme.colors.primary);
             root.style.setProperty('--secondary-color', theme.colors.secondary);
             root.style.setProperty('--info-color', theme.colors.info);
-            const rgb = getComputedStyle(root).getPropertyValue('--primary-color').match(/\d+/g);
-            if (rgb) root.style.setProperty('--primary-color-rgb', `${rgb[0]}, ${rgb[1]}, ${rgb[2]}`);
+
+            const hexToRgb = (hex) => {
+                let c = (hex || '').replace('#', '').trim();
+                if (c.length === 3) c = c.split('').map(x => x + x).join('');
+                const num = parseInt(c, 16);
+                return (isNaN(num) || c.length !== 6) ? { r: 40, g: 167, b: 69 } : { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+            };
+            const rgbObj = hexToRgb(theme.colors.primary);
+            const r = rgbObj.r, g = rgbObj.g, b = rgbObj.b;
+            root.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
+
+            const lighten = (val, amt) => Math.min(255, Math.max(0, Math.round(val + (255 - val) * amt)));
+            const rLight = lighten(r, 0.24).toString(16).padStart(2, '0');
+            const gLight = lighten(g, 0.24).toString(16).padStart(2, '0');
+            const bLight = lighten(b, 0.24).toString(16).padStart(2, '0');
+            const primaryLight = `#${rLight}${gLight}${bLight}`;
+
+            root.style.setProperty('--primary-color-light', primaryLight);
+            root.style.setProperty('--primary-color-soft', `rgba(${r}, ${g}, ${b}, 0.12)`);
+            root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${theme.colors.primary} 0%, ${primaryLight} 100%)`);
+            root.style.setProperty('--primary-shadow', `0 8px 18px rgba(${r}, ${g}, ${b}, 0.25)`);
         }
 
         document.body.className = '';
