@@ -1,0 +1,4 @@
+ALTER TABLE orders ADD COLUMN member_id INTEGER;
+ALTER TABLE orders ADD COLUMN credit_before REAL;
+ALTER TABLE orders ADD COLUMN credit_after REAL;
+ALTER TABLE orders ADD COLUMN payment_method TEXT DEFAULT 'PROMPTPAY';

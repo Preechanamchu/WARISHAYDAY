@@ -2866,6 +2866,382 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- ===== START: Member Management Menu (Menu #3) ===== -->
+            <div id="admin-menu-member" class="admin-menu-content" style="display: none;">
+                <div class="tab-group-container" id="member-tabs"></div>
+
+                <!-- Submenu 1: Member Dashboard -->
+                <div id="admin-sub-member-dashboard" class="admin-sub-content active">
+                    <div class="member-dashboard-container">
+                        <!-- 6 Summary Cards -->
+                        <div class="member-stats-grid">
+                            <div class="stat-card-v2 gradient-purple">
+                                <div class="stat-label-v2">👥 สมาชิกทั้งหมด</div>
+                                <div class="stat-value-v2" id="member-stat-total">0</div>
+                                <div class="stat-unit-v2">คน</div>
+                            </div>
+                            <div class="stat-card-v2 gradient-green">
+                                <div class="stat-label-v2">✅ สมาชิกใช้งานอยู่</div>
+                                <div class="stat-value-v2" id="member-stat-active">0</div>
+                                <div class="stat-unit-v2">คน (Active)</div>
+                            </div>
+                            <div class="stat-card-v2 gradient-pink">
+                                <div class="stat-label-v2">✨ สมาชิกใหม่วันนี้</div>
+                                <div class="stat-value-v2" id="member-stat-today">0</div>
+                                <div class="stat-unit-v2">คน</div>
+                            </div>
+                            <div class="stat-card-v2 gradient-orange">
+                                <div class="stat-label-v2">💰 เครดิตสมาชิกทั้งหมด</div>
+                                <div class="stat-value-v2" id="member-stat-credit">฿0.00</div>
+                                <div class="stat-unit-v2">ยอดรวมทุก Wallet</div>
+                            </div>
+                            <div class="stat-card-v2 gradient-blue">
+                                <div class="stat-label-v2">🛒 ยอดสั่งซื้อวันนี้</div>
+                                <div class="stat-value-v2" id="member-stat-orders-today">฿0.00</div>
+                                <div class="stat-unit-v2">จากสมาชิก</div>
+                            </div>
+                            <div class="stat-card-v2 gradient-teal">
+                                <div class="stat-label-v2">📊 ยอดสั่งซื้อเดือนนี้</div>
+                                <div class="stat-value-v2" id="member-stat-orders-month">฿0.00</div>
+                                <div class="stat-unit-v2">จากสมาชิก</div>
+                            </div>
+                        </div>
+
+                        <!-- Highlight Card: สมาชิกสั่งซื้อสูงสุดวันนี้ -->
+                        <div class="member-highlight-card" id="member-highlight-card">
+                            <div class="highlight-badge">🏆 สมาชิกสั่งซื้อสูงสุดวันนี้</div>
+                            <div class="highlight-content" id="highlight-member-content">
+                                <div class="highlight-avatar">👑</div>
+                                <div class="highlight-info">
+                                    <h4 id="highlight-member-name">ยังไม่มีคำสั่งซื้อวันนี้</h4>
+                                    <p id="highlight-member-details">Member ID: - | Username: -</p>
+                                </div>
+                                <div class="highlight-stats">
+                                    <div class="hl-stat-item">
+                                        <span class="hl-stat-label">ออเดอร์วันนี้</span>
+                                        <span class="hl-stat-val" id="highlight-order-count">0</span>
+                                    </div>
+                                    <div class="hl-stat-item">
+                                        <span class="hl-stat-label">ยอดรวม</span>
+                                        <span class="hl-stat-val text-gold" id="highlight-order-total">฿0.00</span>
+                                    </div>
+                                    <div class="hl-stat-item">
+                                        <span class="hl-stat-label">เครดิตคงเหลือ</span>
+                                        <span class="hl-stat-val text-green" id="highlight-remaining-credit">฿0.00</span>
+                                    </div>
+                                    <button class="btn btn-small btn-primary" id="highlight-view-detail-btn" style="display: none;">ดูข้อมูลสมาชิก</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2 Analytics Charts -->
+                        <div class="content-row-v2" style="margin-top: 24px;">
+                            <!-- Chart 1: New Members -->
+                            <div class="chart-panel-v2">
+                                <div class="panel-header-v2">
+                                    <h3 class="panel-title-v2">📈 กราฟสมาชิกใหม่</h3>
+                                    <select id="member-chart-timeframe" class="date-picker-v2">
+                                        <option value="today">วันนี้</option>
+                                        <option value="7days">7 วัน</option>
+                                        <option value="30days" selected>30 วัน</option>
+                                        <option value="thisMonth">เดือนนี้</option>
+                                        <option value="thisYear">ปีนี้</option>
+                                    </select>
+                                </div>
+                                <div class="chart-area-v2">
+                                    <canvas id="member-new-chart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Chart 2: Member Orders -->
+                            <div class="chart-panel-v2">
+                                <div class="panel-header-v2">
+                                    <h3 class="panel-title-v2">🛍️ กราฟยอดสั่งซื้อของสมาชิก</h3>
+                                    <select id="member-orders-chart-timeframe" class="date-picker-v2">
+                                        <option value="today">วันนี้</option>
+                                        <option value="7days">7 วัน</option>
+                                        <option value="30days" selected>30 วัน</option>
+                                        <option value="thisMonth">เดือนนี้</option>
+                                        <option value="thisYear">ปีนี้</option>
+                                    </select>
+                                </div>
+                                <div class="chart-area-v2">
+                                    <canvas id="member-orders-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top 10 Members Table -->
+                        <div class="chart-panel-v2 full-width" style="margin-top: 24px;">
+                            <div class="panel-header-v2">
+                                <div>
+                                    <h3 class="panel-title-v2">⭐ Top 10 Members — สมาชิกยอดสั่งซื้อสูงสุด</h3>
+                                    <small style="color: #888;">คลิกที่สมาชิกเพื่อดูรายละเอียด</small>
+                                </div>
+                                <select id="top10-timeframe" class="date-picker-v2">
+                                    <option value="thisMonth" selected>เดือนนี้</option>
+                                    <option value="today">วันนี้</option>
+                                    <option value="7days">7 วัน</option>
+                                    <option value="30days">30 วัน</option>
+                                    <option value="thisYear">ปีนี้</option>
+                                    <option value="all">ทั้งหมด</option>
+                                </select>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="member-modern-table" id="top10-members-table">
+                                    <thead>
+                                        <tr>
+                                            <th>อันดับ</th>
+                                            <th>Member ID</th>
+                                            <th>Username</th>
+                                            <th>ชื่อ</th>
+                                            <th>จำนวน Order</th>
+                                            <th>ยอดสั่งซื้อ</th>
+                                            <th>เครดิตคงเหลือ</th>
+                                            <th>Tags</th>
+                                            <th>การกระทำ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="top10-members-body">
+                                        <tr><td colspan="9" style="text-align: center; padding: 30px;">กำลังโหลดข้อมูล...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submenu 2: Member Management List -->
+                <div id="admin-sub-member-list" class="admin-sub-content">
+                    <div class="member-list-container">
+                        <!-- Search & Filter Controls -->
+                        <div class="member-filter-card">
+                            <div class="member-filter-row">
+                                <div class="member-search-group">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="member-search-input" class="form-control" placeholder="ค้นหาสมาชิก... ID, Username, ชื่อ, เบอร์โทร, Tag">
+                                    <button class="btn btn-secondary btn-small" id="member-search-clear-btn" style="display: none;">✕</button>
+                                </div>
+                                <div class="member-filter-group">
+                                    <label>สถานะ:</label>
+                                    <select id="member-filter-status" class="form-control">
+                                        <option value="ALL">ทั้งหมด</option>
+                                        <option value="ACTIVE">Active (ใช้งานอยู่)</option>
+                                        <option value="SUSPENDED">Suspended (ระงับชั่วคราว)</option>
+                                        <option value="DISABLED">Disabled (ปิดใช้งาน)</option>
+                                    </select>
+                                </div>
+                                <div class="member-filter-group">
+                                    <label>เครดิต:</label>
+                                    <select id="member-filter-credit" class="form-control">
+                                        <option value="ALL">ทั้งหมด</option>
+                                        <option value="HAS_CREDIT">มีเครดิตคงเหลือ</option>
+                                        <option value="NO_CREDIT">ไม่มีเครดิต</option>
+                                    </select>
+                                </div>
+                                <div class="member-filter-group">
+                                    <label>วันที่สมัคร:</label>
+                                    <select id="member-filter-date" class="form-control">
+                                        <option value="all">ทั้งหมด</option>
+                                        <option value="today">วันนี้</option>
+                                        <option value="7days">7 วัน</option>
+                                        <option value="30days">30 วัน</option>
+                                        <option value="custom">กำหนดเอง</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Custom Date Range Picker (Hidden by default) -->
+                            <div class="member-custom-date-row" id="member-custom-date-row" style="display: none;">
+                                <div class="date-input-group">
+                                    <label>ตั้งแต่วันที่:</label>
+                                    <input type="date" id="member-custom-start-date" class="form-control">
+                                </div>
+                                <div class="date-input-group">
+                                    <label>ถึงวันที่:</label>
+                                    <input type="date" id="member-custom-end-date" class="form-control">
+                                </div>
+                                <button class="btn btn-primary btn-small" id="member-apply-custom-date-btn">ค้นหาตามช่วงวันที่</button>
+                            </div>
+                            <!-- Sort & Action Bar -->
+                            <div class="member-action-bar">
+                                <div class="sort-controls">
+                                    <label>จัดเรียงตาม:</label>
+                                    <select id="member-sort-by" class="form-control">
+                                        <option value="id">Member ID</option>
+                                        <option value="created_at">วันที่สมัคร</option>
+                                        <option value="credit">เครดิตคงเหลือ</option>
+                                        <option value="total_spent">ยอดซื้อสะสม</option>
+                                        <option value="order_count">จำนวน Order</option>
+                                        <option value="last_login_at">Login ล่าสุด</option>
+                                    </select>
+                                    <select id="member-sort-order" class="form-control">
+                                        <option value="desc">มาก → น้อย / ใหม่ → เก่า</option>
+                                        <option value="asc">น้อย → มาก / เก่า → ใหม่</option>
+                                    </select>
+                                </div>
+                                <div class="action-buttons-group">
+                                    <button class="btn btn-success" id="btn-export-members-csv">📥 Export CSV</button>
+                                    <button class="btn btn-primary" id="btn-open-add-member-modal">+ เพิ่มสมาชิกใหม่</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Members Table -->
+                        <div class="table-wrapper member-table-wrapper">
+                            <table class="member-modern-table" id="members-table">
+                                <thead>
+                                    <tr>
+                                        <th>Member ID</th>
+                                        <th>Username</th>
+                                        <th>ชื่อ-นามสกุล</th>
+                                        <th>เบอร์โทร</th>
+                                        <th>จำนวน Tags</th>
+                                        <th>เครดิตคงเหลือ</th>
+                                        <th>จำนวน Order</th>
+                                        <th>ยอดซื้อสะสม</th>
+                                        <th>สมัครเมื่อ</th>
+                                        <th>Login ล่าสุด</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="members-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <!-- Loading Skeleton -->
+                            <div id="members-skeleton-loader" class="skeleton-loader-container" style="display: none;">
+                                <div class="skeleton-row"></div>
+                                <div class="skeleton-row"></div>
+                                <div class="skeleton-row"></div>
+                                <div class="skeleton-row"></div>
+                                <div class="skeleton-row"></div>
+                            </div>
+                            <!-- Empty State -->
+                            <div id="members-empty-state" class="member-empty-state" style="display: none;">
+                                <div class="empty-icon">👥</div>
+                                <h3>ยังไม่มีสมาชิก</h3>
+                                <p>เริ่มมีสมาชิกเมื่อมีลูกค้าสมัครผ่านระบบ หรือกดปุ่ม "+ เพิ่มสมาชิกใหม่" ด้านบน</p>
+                            </div>
+                            <!-- Error State -->
+                            <div id="members-error-state" class="member-error-state" style="display: none;">
+                                <div class="error-icon">⚠️</div>
+                                <h3>ไม่สามารถโหลดข้อมูลสมาชิกได้</h3>
+                                <p id="members-error-message">โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่อีกครั้ง</p>
+                                <button class="btn btn-primary btn-small" id="btn-retry-members">ลองใหม่อีกครั้ง</button>
+                            </div>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div class="member-pagination-container">
+                            <div class="pagination-info">
+                                <span>แสดง</span>
+                                <select id="member-page-limit" class="form-control" style="width: auto; display: inline-block;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span>รายการต่อหน้า | <span id="member-page-info">กำลังโหลด...</span></span>
+                            </div>
+                            <div class="pagination-buttons">
+                                <button class="btn btn-secondary btn-small" id="member-prev-page-btn" disabled>« Previous</button>
+                                <div id="member-pagination-numbers" class="page-numbers-group"></div>
+                                <button class="btn btn-secondary btn-small" id="member-next-page-btn" disabled>Next »</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submenu 3: Credit Requests & Slip Verification -->
+                <div id="admin-sub-credit-requests" class="admin-sub-content">
+                    <div class="credit-requests-container">
+                        <div class="credit-requests-header">
+                            <div class="credit-filter-tabs">
+                                <button class="credit-tab-btn active" data-status="ALL">ทั้งหมด (<span id="credit-count-all">0</span>)</button>
+                                <button class="credit-tab-btn" data-status="PENDING">รอตรวจสอบ (<span id="credit-count-pending">0</span>)</button>
+                                <button class="credit-tab-btn" data-status="APPROVED">อนุมัติแล้ว (<span id="credit-count-approved">0</span>)</button>
+                                <button class="credit-tab-btn" data-status="REJECTED">ปฏิเสธแล้ว (<span id="credit-count-rejected">0</span>)</button>
+                            </div>
+                            <button class="btn btn-secondary btn-small" id="btn-refresh-credit-requests">🔄 รีเฟรช</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="member-modern-table" id="credit-requests-table">
+                                <thead>
+                                    <tr>
+                                        <th>รหัสคำขอ</th>
+                                        <th>สมาชิก</th>
+                                        <th>จำนวนเงิน</th>
+                                        <th>วันที่ส่ง</th>
+                                        <th>สลิปโอนเงิน</th>
+                                        <th>สถานะ</th>
+                                        <th>หมายเหตุ</th>
+                                        <th>การกระทำ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="credit-requests-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div id="credit-requests-empty" class="member-empty-state" style="display: none;">
+                                <div class="empty-icon">🧾</div>
+                                <h3>ไม่มีรายการคำขอเติมเครดิต</h3>
+                                <p>เมื่อลูกค้าส่งคำขอเติมเครดิตพร้อมสลิป รายการจะแสดงขึ้นที่นี่</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submenu 4: Audit Logs -->
+                <div id="admin-sub-audit-logs" class="admin-sub-content">
+                    <div class="audit-logs-container">
+                        <div class="audit-logs-filter-bar">
+                            <div class="audit-search-group">
+                                <input type="text" id="audit-search-input" class="form-control" placeholder="ค้นหาตาม Admin, Target ID, เหตุผล...">
+                            </div>
+                            <div class="audit-filter-group">
+                                <label>ประเภทการกระทำ:</label>
+                                <select id="audit-filter-action" class="form-control">
+                                    <option value="ALL">ทั้งหมด</option>
+                                    <option value="ADJUST_CREDIT">ADJUST_CREDIT (ปรับเครดิต)</option>
+                                    <option value="APPROVE_DEPOSIT">APPROVE_DEPOSIT (อนุมัติสลิป)</option>
+                                    <option value="REJECT_DEPOSIT">REJECT_DEPOSIT (ปฏิเสธสลิป)</option>
+                                    <option value="UPDATE_MEMBER">UPDATE_MEMBER (แก้ไขสมาชิก)</option>
+                                    <option value="CREATE_MEMBER">CREATE_MEMBER (สร้างสมาชิก)</option>
+                                    <option value="ADD_TAG">ADD_TAG (เพิ่มแท็ก)</option>
+                                    <option value="UPDATE_TAG">UPDATE_TAG (แก้ไขแท็ก)</option>
+                                    <option value="DELETE_TAG">DELETE_TAG (ลบแท็ก)</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-secondary btn-small" id="btn-refresh-audit-logs">🔄 รีเฟรช</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="member-modern-table" id="audit-logs-table">
+                                <thead>
+                                    <tr>
+                                        <th>เวลา</th>
+                                        <th>ผู้ดูแล (Admin)</th>
+                                        <th>การกระทำ (Action)</th>
+                                        <th>เป้าหมาย (Target)</th>
+                                        <th>ข้อมูลก่อนหน้า</th>
+                                        <th>ข้อมูลหลังทำ</th>
+                                        <th>เหตุผล / หมายเหตุ</th>
+                                        <th>IP Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="audit-logs-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== END: Member Management Menu ===== -->
+
             <div id="admin-menu-dashboard" class="admin-menu-content" style="display: none;">
                 <div class="tab-group-container" id="admin-dashboard-tabs"></div>
 
@@ -5695,6 +6071,282 @@
         </div>
     </div>
     <!-- ===== END: Out of Stock Modal ===== -->
+
+    <!-- ===== START: Member Management Modals ===== -->
+    <!-- 1. Member Detail Modal -->
+    <div id="member-detail-modal" class="modal">
+        <div class="modal-content member-detail-modal-content">
+            <span class="close-modal" id="close-member-detail-modal">&times;</span>
+            <div class="member-detail-header">
+                <div class="member-detail-profile">
+                    <div class="member-avatar-large">👤</div>
+                    <div class="member-profile-info">
+                        <div class="member-title-row">
+                            <h2 id="detail-member-username">Username</h2>
+                            <span class="status-badge" id="detail-member-status-badge">ACTIVE</span>
+                            <span class="member-id-tag" id="detail-member-code">#000000</span>
+                        </div>
+                        <p class="member-subtitle">
+                            <span id="detail-member-fullname">ชื่อ นามสกุล</span> • 
+                            📞 <span id="detail-member-phone">081-234-5678</span> • 
+                            📅 สมัครเมื่อ: <span id="detail-member-created">2026-09-19</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- Large Credit Display -->
+                <div class="member-large-credit-card">
+                    <span class="large-credit-label">💳 เครดิตคงเหลือใน Wallet</span>
+                    <span class="large-credit-value" id="detail-member-credit">฿0.00</span>
+                    <div class="credit-card-actions">
+                        <button class="btn btn-primary btn-small" id="btn-open-credit-adjust-from-detail">⚡ ปรับเครดิต (+/-)</button>
+                        <button class="btn btn-secondary btn-small" id="btn-toggle-member-status">เปลี่ยนสถานะ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Tags Management Section -->
+            <div class="member-tags-card">
+                <div class="member-tags-header">
+                    <div>
+                        <h4 style="margin:0;">🏷️ แท็กรับสินค้า (Hay Day Player Tags)</h4>
+                        <small style="color: #666;">ทุก Tag จะหักเครดิตจาก Wallet เดียวกันนี้เสมอ</small>
+                    </div>
+                    <button class="btn btn-small btn-primary" id="btn-open-add-tag-modal">+ เพิ่ม Tag ใหม่</button>
+                </div>
+                <div class="member-tags-list" id="detail-member-tags-list">
+                    <!-- Dynamic tag chips -->
+                </div>
+            </div>
+
+            <!-- Detail Tabs -->
+            <div class="member-detail-tabs-bar">
+                <button class="member-detail-tab-btn active" data-tab="orders">📦 คำสั่งซื้อ (Orders)</button>
+                <button class="member-detail-tab-btn" data-tab="credit">💰 กระเป๋าเงิน & Ledger</button>
+                <button class="member-detail-tab-btn" data-tab="activity">📋 กิจกรรมสมาชิก (Activity)</button>
+            </div>
+
+            <!-- Tab 1: Orders -->
+            <div class="member-detail-tab-pane active" id="detail-tab-orders">
+                <div class="table-wrapper">
+                    <table class="member-modern-table" id="detail-orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>วันที่</th>
+                                <th>Tag ที่สั่ง</th>
+                                <th>จำนวนสินค้า</th>
+                                <th>ยอดรวม</th>
+                                <th>เครดิตก่อนหัก</th>
+                                <th>เครดิตหลังหัก</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-orders-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Credit & Ledger -->
+            <div class="member-detail-tab-pane" id="detail-tab-credit">
+                <div class="member-wallet-stats-row">
+                    <div class="wallet-stat-box">
+                        <span class="stat-box-label">ยอดเครดิตปัจจุบัน</span>
+                        <span class="stat-box-val text-green" id="wallet-box-balance">฿0.00</span>
+                    </div>
+                    <div class="wallet-stat-box">
+                        <span class="stat-box-label">ยอดเติมสะสมทั้งหมด</span>
+                        <span class="stat-box-val text-blue" id="wallet-box-deposit">฿0.00</span>
+                    </div>
+                    <div class="wallet-stat-box">
+                        <span class="stat-box-label">ยอดใช้จ่ายสะสมทั้งหมด</span>
+                        <span class="stat-box-val text-orange" id="wallet-box-spent">฿0.00</span>
+                    </div>
+                </div>
+                <h4 style="margin: 20px 0 10px 0;">📜 ประวัติ Transaction Ledger ย้อนหลัง</h4>
+                <div class="table-wrapper">
+                    <table class="member-modern-table" id="detail-ledger-table">
+                        <thead>
+                            <tr>
+                                <th>รหัสรายการ</th>
+                                <th>วันที่</th>
+                                <th>ประเภท</th>
+                                <th>จำนวนเงิน</th>
+                                <th>เครดิตก่อน</th>
+                                <th>เครดิตหลัง</th>
+                                <th>Reference / หมายเหตุ</th>
+                                <th>ผู้ดำเนินการ</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-ledger-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Activity Log -->
+            <div class="member-detail-tab-pane" id="detail-tab-activity">
+                <div class="table-wrapper">
+                    <table class="member-modern-table" id="detail-activity-table">
+                        <thead>
+                            <tr>
+                                <th>เวลา</th>
+                                <th>กิจกรรม</th>
+                                <th>รายละเอียด</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-activity-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Manual Credit Adjustment Modal -->
+    <div id="credit-adjust-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" id="close-credit-adjust-modal">&times;</span>
+            <h3 style="margin-top:0;">⚡ ปรับยอดเครดิตสมาชิก (Manual Adjustment)</h3>
+            <p style="color: #666; font-size: 0.9rem;">
+                สมาชิก: <strong id="adjust-modal-member-info">#000000 - Username</strong><br>
+                เครดิตปัจจุบัน: <strong class="text-green" id="adjust-modal-current-credit">฿0.00</strong>
+            </p>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label>ประเภทการปรับยอด:</label>
+                <div class="adjust-type-toggle">
+                    <button type="button" class="btn-adjust-type active" id="btn-adj-add" data-type="ADD">+ เพิ่มเครดิต (Add)</button>
+                    <button type="button" class="btn-adjust-type" id="btn-adj-deduct" data-type="DEDUCT">- ลดเครดิต (Deduct)</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="adjust-amount-input">จำนวนเงิน (บาท):</label>
+                <input type="number" id="adjust-amount-input" class="form-control" placeholder="เช่น 100" min="1" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adjust-reason-input">เหตุผลในการปรับยอด <span style="color:red;">*</span>:</label>
+                <textarea id="adjust-reason-input" class="form-control" rows="3" placeholder="ระบุเหตุผล เช่น ชดเชยกรณีระบบผิดพลาด, แก้ไขยอดโอน..." required></textarea>
+            </div>
+
+            <div class="adjust-preview-box">
+                <div class="adj-preview-item">
+                    <span>ก่อนปรับ:</span>
+                    <strong id="adj-preview-before">฿0.00</strong>
+                </div>
+                <div class="adj-preview-item">
+                    <span>การเปลี่ยนแปลง:</span>
+                    <strong id="adj-preview-delta" class="text-green">+฿0.00</strong>
+                </div>
+                <div class="adj-preview-item" style="border-top: 1px dashed #ccc; padding-top: 6px; margin-top: 6px;">
+                    <span>เครดิตหลังปรับ:</span>
+                    <strong id="adj-preview-after" style="font-size: 1.2rem;">฿0.00</strong>
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" id="cancel-credit-adjust-btn">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="confirm-credit-adjust-btn">บันทึกการปรับยอด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Slip Verification Modal -->
+    <div id="slip-verify-modal" class="modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <span class="close-modal" id="close-slip-verify-modal">&times;</span>
+            <h3 style="margin-top:0;">🧾 ตรวจสอบสลิปโอนเงิน</h3>
+            <div class="slip-modal-body">
+                <div class="slip-image-container">
+                    <img id="slip-modal-img" src="" alt="สลิปโอนเงิน" class="slip-preview-img">
+                </div>
+                <div class="slip-details-box">
+                    <p>รหัสคำขอ: <strong id="slip-modal-code">-</strong></p>
+                    <p>สมาชิก: <strong id="slip-modal-member">-</strong></p>
+                    <p>ยอดเงิน: <strong class="text-green" id="slip-modal-amount" style="font-size: 1.4rem;">฿0.00</strong></p>
+                    <p>วันที่ส่ง: <span id="slip-modal-date">-</span></p>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="slip-modal-notes">หมายเหตุ (กรณีปฏิเสธ หรือบันทึกเพิ่มเติม):</label>
+                        <input type="text" id="slip-modal-notes" class="form-control" placeholder="เช่น สลิปไม่ชัดเจน, ยอดเงินไม่ตรง...">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-danger" id="btn-reject-slip">❌ ปฏิเสธคำขอ</button>
+                <button type="button" class="btn btn-success" id="btn-approve-slip">✅ อนุมัติเติมเครดิต</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Add Member Modal -->
+    <div id="member-add-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" id="close-member-add-modal">&times;</span>
+            <h3 style="margin-top:0;">👤 เพิ่มสมาชิกใหม่</h3>
+            <form id="add-member-form">
+                <div class="form-group">
+                    <label for="add-member-username">Username <span style="color:red;">*</span>:</label>
+                    <input type="text" id="add-member-username" class="form-control" placeholder="เช่น player01" required>
+                </div>
+                <div class="form-group">
+                    <label for="add-member-password">รหัสผ่าน (Password) <span style="color:red;">*</span>:</label>
+                    <input type="password" id="add-member-password" class="form-control" placeholder="รหัสผ่านอย่างน้อย 6 ตัวอักษร" required minlength="6">
+                </div>
+                <div class="form-row" style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="add-member-firstname">ชื่อ:</label>
+                        <input type="text" id="add-member-firstname" class="form-control" placeholder="ชื่อจริง">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="add-member-lastname">นามสกุล:</label>
+                        <input type="text" id="add-member-lastname" class="form-control" placeholder="นามสกุล">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="add-member-phone">เบอร์โทรศัพท์:</label>
+                    <input type="tel" id="add-member-phone" class="form-control" placeholder="08x-xxx-xxxx">
+                </div>
+                <div class="form-group">
+                    <label for="add-member-tags">Hay Day Tags (คั่นด้วยจุลภาค ,):</label>
+                    <input type="text" id="add-member-tags" class="form-control" placeholder="เช่น LJV8U8QGU, LYC9RJPLJ">
+                    <small style="color: #666;">สามารถเพิ่มหรือแก้ไขภายหลังได้</small>
+                </div>
+                <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" id="cancel-add-member-btn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary" id="save-new-member-btn">บันทึกสมาชิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Add Tag Modal -->
+    <div id="member-add-tag-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <span class="close-modal" id="close-member-add-tag-modal">&times;</span>
+            <h3 style="margin-top:0;">🏷️ เพิ่มแท็กรับสินค้า</h3>
+            <div class="form-group">
+                <label for="new-tag-input">Hay Day Tag (ไม่ต้องใส่เครื่องหมาย #) <span style="color:red;">*</span>:</label>
+                <input type="text" id="new-tag-input" class="form-control" placeholder="เช่น LJV8U8QGU" required style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+                <label for="new-tag-name-input">ชื่อเรียก / หมายเหตุแท็ก:</label>
+                <input type="text" id="new-tag-name-input" class="form-control" placeholder="เช่น ฟาร์มหลัก, ฟาร์มสำรอง...">
+            </div>
+            <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" id="cancel-add-tag-btn">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="save-new-tag-btn">เพิ่มแท็ก</button>
+            </div>
+        </div>
+    </div>
+    <!-- ===== END: Member Management Modals ===== -->
+
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <!-- Category Form Toggle Script -->

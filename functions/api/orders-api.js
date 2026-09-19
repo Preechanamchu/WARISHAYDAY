@@ -62,6 +62,56 @@ async function createOrder(orderData, env) {
   const customerEmailValue = orderData.customerEmail || orderData.customer_email || null;
   const isFreeOrder = Number(orderData.total) === 0 ? 1 : 0;
   const storeId = orderData.storeId ? Number(orderData.storeId) : 1;
+  const paymentMethod = String(orderData.paymentMethod || orderData.payment_method || 'PROMPTPAY').toUpperCase();
+
+  let memberId = null;
+  let creditBefore = null;
+  let creditAfter = null;
+
+  // Check if customer_tag matches any member
+  if (customerTagValue) {
+    try {
+      const cleanTag = String(customerTagValue).trim().toUpperCase();
+      const tagRow = await env.DB.prepare(`
+        SELECT ct.member_id, m.status, w.id as wallet_id, w.balance, w.total_spent
+        FROM customer_tags ct
+        JOIN members m ON m.id = ct.member_id
+        LEFT JOIN wallets w ON w.member_id = ct.member_id
+        WHERE UPPER(TRIM(ct.tag)) = ? AND ct.status = 'ACTIVE'
+      `).bind(cleanTag).first();
+
+      if (tagRow && tagRow.member_id) {
+        memberId = tagRow.member_id;
+
+        // If paying with Member Credit
+        if (paymentMethod === 'CREDIT' && !isFreeOrder) {
+          if (tagRow.status !== 'ACTIVE') {
+            return new Response(JSON.stringify({ error: 'บัญชีสมาชิกถูกระงับ ไม่สามารถชำระด้วยเครดิตได้' }), {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+
+          const orderTotal = Number(orderData.total) || 0;
+          const currentBal = Number(tagRow.balance) || 0;
+
+          if (currentBal < orderTotal) {
+            return new Response(JSON.stringify({ 
+              error: `ยอดเครดิตคงเหลือไม่เพียงพอ (คงเหลือ ฿${currentBal.toLocaleString()}, ยอดสั่งซื้อ ฿${orderTotal.toLocaleString()})` 
+            }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+
+          creditBefore = currentBal;
+          creditAfter = currentBal - orderTotal;
+        }
+      }
+    } catch (tagErr) {
+      console.error('Tag matching error:', tagErr);
+    }
+  }
 
   let currentId = orderData.id;
   let success = false;
@@ -70,22 +120,43 @@ async function createOrder(orderData, env) {
 
   while (attempts < maxAttempts && !success) {
     try {
-      await env.DB.prepare(`
-        INSERT INTO orders (order_id, timestamp, total, items, status, promo_applied, upgrade_snapshot, customer_tag, customer_email, is_free_order, store_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).bind(
-        currentId,
-        orderData.timestamp || new Date().toISOString(),
-        orderData.total,
-        itemsJson,
-        'new',
-        promoJson,
-        upgradeSnapshotJson,
-        customerTagValue,
-        customerEmailValue,
-        isFreeOrder,
-        storeId
-      ).run();
+      const now = orderData.timestamp || new Date().toISOString();
+
+      if (paymentMethod === 'CREDIT' && memberId && creditBefore !== null && creditAfter !== null) {
+        // Atomic transaction: Insert order + Deduct wallet + Ledger + Activity
+        const txCode = `PUR-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+        const orderTotal = Number(orderData.total) || 0;
+
+        await env.DB.batch([
+          env.DB.prepare(`
+            INSERT INTO orders (order_id, timestamp, total, items, status, promo_applied, upgrade_snapshot, customer_tag, customer_email, is_free_order, store_id, member_id, credit_before, credit_after, payment_method)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(
+            currentId, now, orderData.total, itemsJson, 'new', promoJson, upgradeSnapshotJson, customerTagValue, customerEmailValue, isFreeOrder, storeId, memberId, creditBefore, creditAfter, 'CREDIT'
+          ),
+          env.DB.prepare(`
+            UPDATE wallets 
+            SET balance = ?, total_spent = total_spent + ?, updated_at = ? 
+            WHERE member_id = ?
+          `).bind(creditAfter, orderTotal, now, memberId),
+          env.DB.prepare(`
+            INSERT INTO wallet_transactions (transaction_code, wallet_id, member_id, type, amount, balance_before, balance_after, reference, status, note, created_at)
+            VALUES (?, (SELECT id FROM wallets WHERE member_id = ?), ?, 'PURCHASE', ?, ?, ?, ?, 'COMPLETED', ?, ?)
+          `).bind(txCode, memberId, memberId, -orderTotal, creditBefore, creditAfter, currentId, `ชำระคำสั่งซื้อ #${currentId}`, now),
+          env.DB.prepare(`
+            INSERT INTO member_activities (member_id, activity_type, description, metadata, created_at)
+            VALUES (?, 'ORDER', ?, ?, ?)
+          `).bind(memberId, `สั่งซื้อสินค้า #${currentId} ผ่านเครดิต ฿${orderTotal.toLocaleString()}`, JSON.stringify({ orderId: currentId, total: orderTotal }), now)
+        ]);
+      } else {
+        // Standard order (PromptPay, etc.)
+        await env.DB.prepare(`
+          INSERT INTO orders (order_id, timestamp, total, items, status, promo_applied, upgrade_snapshot, customer_tag, customer_email, is_free_order, store_id, member_id, credit_before, credit_after, payment_method)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          currentId, now, orderData.total, itemsJson, 'new', promoJson, upgradeSnapshotJson, customerTagValue, customerEmailValue, isFreeOrder, storeId, memberId, creditBefore, creditAfter, paymentMethod
+        ).run();
+      }
 
       success = true;
     } catch (err) {
@@ -109,7 +180,10 @@ async function createOrder(orderData, env) {
   return new Response(JSON.stringify({
     message: 'Order created successfully',
     orderId: currentId,
-    status: 'new'
+    status: 'new',
+    memberId,
+    paymentMethod,
+    creditRemaining: creditAfter,
   }), {
     status: 201,
     headers: { 'Content-Type': 'application/json' },
