@@ -1620,7 +1620,6 @@ document.addEventListener('DOMContentLoaded', () => {
         adminLogin: document.getElementById('admin-login-view'),
         adminPanel: document.getElementById('admin-panel-view'),
     };
-    window.switchView = switchView;
     const shopNameDisplay = document.getElementById('shop-name-display');
     const shopLogoDisplay = document.getElementById('shop-logo-display');
     const headerTitleContainer = document.getElementById('header-title-container');
@@ -5685,6 +5684,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
+    window.switchView = switchView;
 
     adminGearIcon.addEventListener('click', () => {
         if (!isAdminLoggedIn) {
@@ -15671,6 +15671,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== END: HAYDAY AI BOT INTEGRATION =====
 
     const init = async () => {
+        try {
         const savedCart = localStorage.getItem(getActiveCartStorageKey());
         if (savedCart) {
             try {
@@ -15830,8 +15831,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // do not initialize the removed settings screen on startup.
 
         mainContainer.classList.add('loaded');
-
-        runAndHideLoader();
+        } catch (err) {
+            console.error('Error during init:', err);
+        } finally {
+            runAndHideLoader();
+        }
     };
 
 

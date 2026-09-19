@@ -418,6 +418,14 @@
 
             paint(0);
             frameId = requestAnimationFrame(tick);
+
+            // Safety timeout: Never leave user stuck on loading screen
+            window.setTimeout(() => {
+                if (!finishing && window.HaydayLoader) {
+                    console.warn('HaydayLoader: Safety timeout reached, forcing finish.');
+                    window.HaydayLoader.finish();
+                }
+            }, 5000);
         })();
     </script>
 
