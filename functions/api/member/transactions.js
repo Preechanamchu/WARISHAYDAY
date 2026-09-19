@@ -25,7 +25,8 @@ export async function onRequestGet(context) {
     const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get('limit') || '50', 10)));
 
     const res = await env.DB.prepare(`
-      SELECT id, transaction_type, amount, balance_before, balance_after, reference_type, reference_id, description, status, created_at
+      SELECT id, transaction_code as transactionCode, type, amount, balance_before as balanceBefore, 
+             balance_after as balanceAfter, reference as referenceId, note as notes, status, created_at as createdAt
       FROM wallet_transactions
       WHERE member_id = ?
       ORDER BY id DESC

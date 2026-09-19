@@ -55,7 +55,7 @@ export async function onRequestGet(context) {
       const tx = await env.DB.prepare(`
         SELECT balance_before, balance_after, amount
         FROM wallet_transactions
-        WHERE member_id = ? AND reference_id = ? AND reference_type = 'ORDER'
+        WHERE member_id = ? AND reference = ?
       `).bind(memberId, orderId).first();
 
       let parsedItems = [];
