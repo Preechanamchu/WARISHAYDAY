@@ -1,0 +1,11 @@
+name = "warishayday"
+compatibility_date = "2026-09-19"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "warishayday-db"
+database_id = "d5d01f19-d430-4388-95a1-a2589df65167"
+
+[vars]
+JWT_SECRET = "warishayday_super_secret_jwt_key_2025_secure"
