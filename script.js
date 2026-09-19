@@ -13127,12 +13127,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // ===== 13 Success Animations - Custom Designs =====
+    // ===== 30 Success Animations - Custom Designs =====
     const SUCCESS_ANIMATION_CATEGORIES = {
         'A': {
             icon: '✅',
-            name: 'เครื่องหมายถูก',
-            description: 'Classic Checkmark Styles',
+            name: 'เครื่องหมายถูกคลาสสิก',
+            description: 'Classic & Modern Checkmarks',
             animations: {
                 '1': { name: 'เครื่องหมายยืนยันสำเร็จ', animClass: 'sa-anim-1' },
                 '2': { name: 'เครื่องหมายสีเหลือง', animClass: 'sa-anim-2' },
@@ -13144,7 +13144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'B': {
             icon: '🎉',
             name: 'ปาร์ตี้ & Celebration',
-            description: 'Confetti & Party Effects',
+            description: 'Party & Celebration Effects',
             animations: {
                 '6': { name: 'เช็คถูกสายปาร์ตี้', animClass: 'sa-anim-6' },
                 '7': { name: 'ยืนยันฉับไว', animClass: 'sa-anim-7' },
@@ -13161,6 +13161,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 '11': { name: 'ยืนยันสุดคูล', animClass: 'sa-anim-11' },
                 '12': { name: 'เครื่องหมายถูกหมุนไล่สี', animClass: 'sa-anim-12' },
                 '13': { name: 'ยืนยันฉบับปาร์ตี้', animClass: 'sa-anim-13' }
+            }
+        },
+        'D': {
+            icon: '✨',
+            name: 'โมเดิร์น & พรีเมียม (ใหม่)',
+            description: 'Modern, Cyber & Luxury',
+            animations: {
+                '14': { name: 'กล่องของขวัญนำโชค', animClass: 'sa-anim-14' },
+                '15': { name: 'นีออนโกลว์ไซเบอร์พังก์', animClass: 'sa-anim-15' },
+                '16': { name: 'จรวดส่งออเดอร์ความเร็วสูง', animClass: 'sa-anim-16' },
+                '17': { name: 'ตราประทับพรีเมียม', animClass: 'sa-anim-17' },
+                '18': { name: 'หัวใจพองโตแห่งความสุข', animClass: 'sa-anim-18' },
+                '19': { name: 'เหรียญทองคำเด้งรับ', animClass: 'sa-anim-19' }
+            }
+        },
+        'E': {
+            icon: '💎',
+            name: 'เอฟเฟกต์หรูหรา & ไฮเทค (ใหม่)',
+            description: 'Futuristic & Diamond Sparkle',
+            animations: {
+                '20': { name: 'คลื่นพลังกระเพื่อม', animClass: 'sa-anim-20' },
+                '21': { name: 'พลุไฟเฉลิมฉลอง', animClass: 'sa-anim-21' },
+                '22': { name: 'การ์ดออเดอร์เรืองแสง 3D', animClass: 'sa-anim-22' },
+                '23': { name: 'เพชรเจียระไนส่องประกาย', animClass: 'sa-anim-23' },
+                '24': { name: 'โล่ผู้พิทักษ์ยืนยันปลอดภัย', animClass: 'sa-anim-24' }
+            }
+        },
+        'F': {
+            icon: '🏆',
+            name: 'รางวัล & เวทมนตร์สุดว้าว (ใหม่)',
+            description: 'Victory, Magic & Prism Glass',
+            animations: {
+                '25': { name: 'กล่องพัสดุบินส่งด่วน', animClass: 'sa-anim-25' },
+                '26': { name: 'วงแหวนเวทมนตร์ออโรร่า', animClass: 'sa-anim-26' },
+                '27': { name: 'ถ้วยรางวัลแชมเปี้ยนทองคำ', animClass: 'sa-anim-27' },
+                '28': { name: 'กระดิ่งแจ้งเตือนเด้งดึ๋ง', animClass: 'sa-anim-28' },
+                '29': { name: 'สปีดไลน์พลังซูเปอร์ชาร์จ', animClass: 'sa-anim-29' },
+                '30': { name: 'กระจกแก้วสะท้อนรุ้ง', animClass: 'sa-anim-30' }
             }
         }
     };
@@ -13456,6 +13494,318 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="sa-particles">
                                 <span></span><span></span><span></span><span></span>
                                 <span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>`;
+                    break;
+                case '14': // กล่องของขวัญนำโชค
+                    animHTML = `
+                        <div class="sa-gift-box">
+                            <div class="sa-gift-confetti gc1"></div>
+                            <div class="sa-gift-confetti gc2"></div>
+                            <div class="sa-gift-confetti gc3"></div>
+                            <div class="sa-gift-confetti gc4"></div>
+                            <div class="sa-gift-confetti gc5"></div>
+                            <div class="sa-gift-body">
+                                <div class="sa-gift-ribbon-v"></div>
+                                <div class="sa-gift-ribbon-h"></div>
+                            </div>
+                            <div class="sa-gift-lid">
+                                <div class="sa-gift-bow"></div>
+                            </div>
+                            <div class="sa-gift-reward">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '15': // นีออนโกลว์ไซเบอร์พังก์
+                    animHTML = `
+                        <div class="sa-cyber-glow">
+                            <div class="sa-cyber-hex">
+                                <svg viewBox="0 0 100 100">
+                                    <polygon class="sa-cyber-hex-path" points="50,4 92,26 92,74 50,96 8,74 8,26" />
+                                </svg>
+                            </div>
+                            <div class="sa-cyber-ring"></div>
+                            <div class="sa-cyber-check">
+                                <svg viewBox="0 0 50 50">
+                                    <path d="M12 25 L22 35 L38 15" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="sa-cyber-sparks">
+                                <i></i><i></i><i></i><i></i><i></i><i></i>
+                            </div>
+                        </div>`;
+                    break;
+                case '16': // จรวดส่งออเดอร์ความเร็วสูง
+                    animHTML = `
+                        <div class="sa-rocket-blast">
+                            <div class="sa-rocket-cloud rc1"></div>
+                            <div class="sa-rocket-cloud rc2"></div>
+                            <div class="sa-rocket-cloud rc3"></div>
+                            <div class="sa-rocket-trail"></div>
+                            <div class="sa-rocket-ship">
+                                <svg viewBox="0 0 64 64">
+                                    <path class="sa-rocket-body-path" d="M32 4 C32 4 48 18 48 38 L40 44 L40 50 L32 47 L24 50 L24 44 L16 38 C16 18 32 4 32 4 Z" fill="var(--sa-primary-color, #ff4757)"/>
+                                    <circle cx="32" cy="24" r="6" fill="#ffffff" />
+                                    <circle cx="32" cy="24" r="4" fill="#333333" />
+                                    <path d="M16 38 L8 46 L18 46 Z" fill="var(--sa-secondary-color, #ffa502)"/>
+                                    <path d="M48 38 L56 46 L46 46 Z" fill="var(--sa-secondary-color, #ffa502)"/>
+                                    <polygon class="sa-rocket-flame" points="26,48 32,62 38,48" fill="#ffdd59"/>
+                                </svg>
+                            </div>
+                            <div class="sa-rocket-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '17': // ตราประทับพรีเมียม
+                    animHTML = `
+                        <div class="sa-wax-seal">
+                            <div class="sa-seal-ribbon left"></div>
+                            <div class="sa-seal-ribbon right"></div>
+                            <div class="sa-seal-stamp">
+                                <div class="sa-seal-outer-ring"></div>
+                                <div class="sa-seal-inner-ring">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="sa-seal-shine"></div>
+                            </div>
+                            <div class="sa-seal-particles">
+                                <span></span><span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>`;
+                    break;
+                case '18': // หัวใจพองโตแห่งความสุข
+                    animHTML = `
+                        <div class="sa-heart-burst">
+                            <div class="sa-heart-halo"></div>
+                            <div class="sa-main-heart">
+                                <svg viewBox="0 0 32 32">
+                                    <path d="M16 28.5 C16 28.5 3 20.5 3 11.5 C3 6.5 7 3 11.5 3 C14.2 3 15.6 4.6 16 5.5 C16.4 4.6 17.8 3 20.5 3 C25 3 29 6.5 29 11.5 C29 20.5 16 28.5 16 28.5 Z" fill="var(--sa-primary-color, #ff477e)"/>
+                                    <path class="sa-heart-check" d="M10 12.5 L14 16.5 L22 8.5" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="sa-mini-hearts">
+                                <div class="mh mh1">❤️</div>
+                                <div class="mh mh2">✨</div>
+                                <div class="mh mh3">💖</div>
+                                <div class="mh mh4">✨</div>
+                                <div class="mh mh5">💕</div>
+                                <div class="mh mh6">✨</div>
+                            </div>
+                        </div>`;
+                    break;
+                case '19': // เหรียญทองคำเด้งรับ
+                    animHTML = `
+                        <div class="sa-gold-coins">
+                            <div class="sa-coin-shower cs1"></div>
+                            <div class="sa-coin-shower cs2"></div>
+                            <div class="sa-coin-shower cs3"></div>
+                            <div class="sa-coin-shower cs4"></div>
+                            <div class="sa-coin-shower cs5"></div>
+                            <div class="sa-main-coin">
+                                <div class="sa-coin-inner">
+                                    <span class="sa-coin-icon">🌾</span>
+                                    <div class="sa-coin-check">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="sa-coin-glint"></div>
+                            </div>
+                        </div>`;
+                    break;
+                case '20': // คลื่นพลังกระเพื่อม
+                    animHTML = `
+                        <div class="sa-liquid-ripple">
+                            <div class="sa-ripple-ring r1"></div>
+                            <div class="sa-ripple-ring r2"></div>
+                            <div class="sa-ripple-ring r3"></div>
+                            <div class="sa-liquid-drop"></div>
+                            <div class="sa-liquid-center">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '21': // พลุไฟเฉลิมฉลอง
+                    animHTML = `
+                        <div class="sa-fireworks-gala">
+                            <div class="sa-fw-spark s1"></div>
+                            <div class="sa-fw-spark s2"></div>
+                            <div class="sa-fw-spark s3"></div>
+                            <div class="sa-fw-spark s4"></div>
+                            <div class="sa-fw-spark s5"></div>
+                            <div class="sa-fw-spark s6"></div>
+                            <div class="sa-fw-spark s7"></div>
+                            <div class="sa-fw-spark s8"></div>
+                            <div class="sa-fw-ring"></div>
+                            <div class="sa-fw-center">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '22': // การ์ดออเดอร์เรืองแสง 3D
+                    animHTML = `
+                        <div class="sa-holo-card">
+                            <div class="sa-holo-card-inner">
+                                <div class="sa-holo-chip"></div>
+                                <div class="sa-holo-lines">
+                                    <div class="sa-holo-line hl1"></div>
+                                    <div class="sa-holo-line hl2"></div>
+                                </div>
+                                <div class="sa-holo-success-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="sa-holo-shine"></div>
+                            </div>
+                        </div>`;
+                    break;
+                case '23': // เพชรเจียระไนส่องประกาย
+                    animHTML = `
+                        <div class="sa-diamond-shimmer">
+                            <div class="sa-diamond-shape">
+                                <svg viewBox="0 0 64 64">
+                                    <polygon points="16,12 48,12 60,26 32,58 4,26" fill="var(--sa-primary-color, #00d2d3)" stroke="#ffffff" stroke-width="1.5" />
+                                    <polyline points="4,26 60,26" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                    <polyline points="16,12 32,58 48,12" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                    <polyline points="16,12 24,26 32,58 40,26 48,12" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                    <polyline points="24,26 4,26 32,58 60,26 40,26" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                </svg>
+                                <div class="sa-diamond-glint dg1"></div>
+                                <div class="sa-diamond-glint dg2"></div>
+                                <div class="sa-diamond-glint dg3"></div>
+                            </div>
+                            <div class="sa-diamond-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '24': // โล่ผู้พิทักษ์ยืนยันปลอดภัย
+                    animHTML = `
+                        <div class="sa-safety-shield">
+                            <div class="sa-shield-glow"></div>
+                            <div class="sa-shield-body">
+                                <svg viewBox="0 0 64 64">
+                                    <path class="sa-shield-path" d="M32 4 L56 14 C56 36 46 54 32 60 C18 54 8 36 8 14 Z" fill="var(--sa-primary-color, #10ac84)" stroke="var(--sa-secondary-color, #ffffff)" stroke-width="2.5"/>
+                                    <path class="sa-shield-inner-path" d="M32 9 L51 17 C51 35 43 49 32 54 C21 49 13 35 13 17 Z" fill="rgba(255,255,255,0.15)"/>
+                                </svg>
+                            </div>
+                            <div class="sa-shield-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="sa-shield-sparkles">
+                                <i></i><i></i><i></i><i></i>
+                            </div>
+                        </div>`;
+                    break;
+                case '25': // กล่องพัสดุบินส่งด่วน
+                    animHTML = `
+                        <div class="sa-flying-parcel">
+                            <div class="sa-wing left"></div>
+                            <div class="sa-wing right"></div>
+                            <div class="sa-parcel-box">
+                                <div class="sa-parcel-tape"></div>
+                                <div class="sa-parcel-stamp">✓</div>
+                            </div>
+                            <div class="sa-parcel-dust d1"></div>
+                            <div class="sa-parcel-dust d2"></div>
+                            <div class="sa-parcel-dust d3"></div>
+                        </div>`;
+                    break;
+                case '26': // วงแหวนเวทมนตร์ออโรร่า
+                    animHTML = `
+                        <div class="sa-aurora-portal">
+                            <div class="sa-aurora-ring outer"></div>
+                            <div class="sa-aurora-ring middle"></div>
+                            <div class="sa-aurora-ring inner"></div>
+                            <div class="sa-aurora-core">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="sa-aurora-stars">
+                                <span></span><span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>`;
+                    break;
+                case '27': // ถ้วยรางวัลแชมเปี้ยนทองคำ
+                    animHTML = `
+                        <div class="sa-champion-trophy">
+                            <div class="sa-trophy-cup">
+                                <svg viewBox="0 0 64 64">
+                                    <path d="M18 10 L46 10 L46 28 C46 38 38 44 32 44 C26 44 18 38 18 28 Z" fill="var(--sa-primary-color, #f1c40f)"/>
+                                    <path d="M18 14 C10 14 6 22 6 26 C6 32 12 34 18 34" fill="none" stroke="var(--sa-primary-color, #f1c40f)" stroke-width="4" stroke-linecap="round"/>
+                                    <path d="M46 14 C54 14 58 22 58 26 C58 32 52 34 46 34" fill="none" stroke="var(--sa-primary-color, #f1c40f)" stroke-width="4" stroke-linecap="round"/>
+                                    <rect x="28" y="44" width="8" height="10" fill="var(--sa-primary-color, #f1c40f)"/>
+                                    <rect x="20" y="54" width="24" height="6" rx="2" fill="#d4ac0d"/>
+                                    <circle cx="32" cy="24" r="7" fill="#ffffff"/>
+                                    <polyline points="29 24 31 26 35 22" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <div class="sa-trophy-shine"></div>
+                            </div>
+                            <div class="sa-trophy-stars">
+                                <i class="ts1">⭐</i>
+                                <i class="ts2">✨</i>
+                                <i class="ts3">⭐</i>
+                            </div>
+                        </div>`;
+                    break;
+                case '28': // กระดิ่งแจ้งเตือนเด้งดึ๋ง
+                    animHTML = `
+                        <div class="sa-jingle-bell">
+                            <div class="sa-bell-wave bw1"></div>
+                            <div class="sa-bell-wave bw2"></div>
+                            <div class="sa-bell-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="var(--sa-primary-color, #f39c12)"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0" fill="none" stroke="var(--sa-primary-color, #f39c12)" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <div class="sa-bell-badge">✓</div>
+                        </div>`;
+                    break;
+                case '29': // สปีดไลน์พลังซูเปอร์ชาร์จ
+                    animHTML = `
+                        <div class="sa-hyperspeed">
+                            <div class="sa-speed-lines">
+                                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            </div>
+                            <div class="sa-speed-flash"></div>
+                            <div class="sa-speed-core">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>`;
+                    break;
+                case '30': // กระจกแก้วสะท้อนรุ้ง
+                    animHTML = `
+                        <div class="sa-prism-glass">
+                            <div class="sa-prism-orb po1"></div>
+                            <div class="sa-prism-orb po2"></div>
+                            <div class="sa-prism-card">
+                                <div class="sa-prism-border"></div>
+                                <div class="sa-prism-check">
+                                    <svg viewBox="0 0 52 52">
+                                        <circle class="sa-prism-circle" cx="26" cy="26" r="23" fill="none"/>
+                                        <path class="sa-prism-path" fill="none" d="M15 26 L23 34 L37 18"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>`;
                     break;
