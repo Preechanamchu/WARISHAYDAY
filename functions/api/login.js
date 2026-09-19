@@ -30,8 +30,26 @@ export async function onRequestPost(context) {
       if (member && member.password_hash) {
         const memberMatch = await bcrypt.compare(password, member.password_hash);
         if (memberMatch) {
+          if (member.status === 'PENDING') {
+            return new Response(JSON.stringify({ error: 'บัญชีของคุณอยู่ระหว่างรอการอนุมัติจากผู้ดูแลระบบ กรุณารอการอนุมัติก่อนเข้าสู่ระบบ' }), {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+          if (member.status === 'REJECTED') {
+            return new Response(JSON.stringify({ error: 'การสมัครสมาชิกของคุณไม่ได้รับการอนุมัติ กรุณาติดต่อผู้ดูแลระบบ' }), {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+          if (member.status === 'SUSPENDED') {
+            return new Response(JSON.stringify({ error: 'บัญชีสมาชิกนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ' }), {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
           if (member.status !== 'ACTIVE') {
-            return new Response(JSON.stringify({ error: 'บัญชีสมาชิกนี้ถูกระงับการใช้งาน กรุณาติดต่อแอดมิน' }), {
+            return new Response(JSON.stringify({ error: 'บัญชีสมาชิกนี้ไม่พร้อมใช้งาน กรุณาติดต่อผู้ดูแลระบบ' }), {
               status: 403,
               headers: { 'Content-Type': 'application/json' },
             });

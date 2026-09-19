@@ -484,6 +484,87 @@
                 </div>
             </header>
 
+            <!-- ===== START: Customer Member Bar & Guest Bar ===== -->
+            <div id="customer-member-bar" class="customer-member-bar" style="display: none;">
+                <div class="member-bar-left">
+                    <div class="member-bar-avatar">👤</div>
+                    <div class="member-bar-info">
+                        <div class="member-bar-greeting">สวัสดี, <span id="cust-bar-name" class="member-bar-name">คุณสมาชิก</span></div>
+                        <div class="member-bar-sub"><span id="cust-bar-username" class="member-bar-username">@username</span></div>
+                    </div>
+                </div>
+                <div class="member-bar-center">
+                    <div class="member-bar-wallet-box">
+                        <span class="wallet-icon">💰</span>
+                        <div class="wallet-text-group">
+                            <span class="wallet-label">เครดิตคงเหลือ</span>
+                            <span class="wallet-amount" id="cust-bar-balance">฿0.00</span>
+                        </div>
+                        <button type="button" class="btn-refresh-wallet" id="btn-cust-refresh-wallet" title="รีเฟรชยอดเงิน">🔄</button>
+                    </div>
+                    <div class="member-bar-tag-box">
+                        <span class="tag-icon">🌾</span>
+                        <div class="tag-selector-wrap">
+                            <label for="cust-bar-tag-select" class="tag-selector-label">แท็กฟาร์ม:</label>
+                            <select id="cust-bar-tag-select" class="cust-bar-tag-select">
+                                <option value="">เลือกแท็กฟาร์ม...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-bar-right">
+                    <button type="button" class="btn-member-action btn-member-topup" id="btn-cust-topup" title="เติมเครดิต">
+                        <span>➕ เติมเครดิต</span>
+                    </button>
+                    <button type="button" class="btn-member-action btn-member-ledger" id="btn-cust-ledger" title="ประวัติเครดิต">
+                        <span>📜 ประวัติเครดิต</span>
+                    </button>
+                    <button type="button" class="btn-member-action btn-member-orders" id="btn-cust-orders" title="ประวัติคำสั่งซื้อ">
+                        <span>📦 คำสั่งซื้อ</span>
+                    </button>
+                    <button type="button" class="btn-member-action btn-member-tags" id="btn-cust-tags" title="จัดการแท็ก">
+                        <span>🌾 จัดการแท็ก</span>
+                    </button>
+                    <button type="button" class="btn-member-action btn-member-logout" id="btn-cust-logout" title="ออกจากระบบ">
+                        <span>🚪 ออก</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Customer Guest Bar (Visible when NOT logged in) -->
+            <div id="customer-guest-bar" class="customer-guest-bar">
+                <div class="guest-bar-text">✨ สมาชิกรับสิทธิพิเศษและชำระด้วยเครดิตได้ที่นี่</div>
+                <div class="guest-bar-actions">
+                    <button type="button" class="btn-guest-login" id="btn-guest-login">
+                        <span>👤 เข้าสู่ระบบ</span>
+                    </button>
+                    <button type="button" class="btn-guest-register" onclick="openPublicMemberRegisterModal()">
+                        <span>✨ สมัครสมาชิก</span>
+                    </button>
+                </div>
+            </div>
+            <!-- ===== END: Customer Member Bar & Guest Bar ===== -->
+
+            <!-- Storefront Active Member Sticky Banner -->
+            <div id="storefront-member-banner" class="storefront-member-banner" style="display: none;">
+                <div class="smb-left">
+                    <span class="smb-avatar">🌾</span>
+                    <span class="smb-greeting">สั่งซื้อในชื่อ: <strong id="smb-member-name">คุณสมาชิก</strong></span>
+                    <span class="smb-balance-pill">💰 เครดิต: <strong id="smb-credit-val">฿0.00</strong></span>
+                </div>
+                <div class="smb-center">
+                    <label for="smb-tag-select" class="smb-tag-label">แท็กฟาร์มที่เลือก:</label>
+                    <select id="smb-tag-select" class="smb-tag-select">
+                        <option value="">-- เลือกแท็กรับสินค้า --</option>
+                    </select>
+                </div>
+                <div class="smb-right">
+                    <button type="button" class="btn-smb-dash" onclick="switchView('customerMember'); switchMemberSubpage('dashboard');">
+                        <span>🔙 แดชบอร์ดสมาชิก</span>
+                    </button>
+                </div>
+            </div>
+
             <main>
                 <div id="product-controls-wrapper" class="card">
                     <div class="category-scroller">
@@ -570,6 +651,315 @@
             <!-- ===== END: Copyright Footer Structural Update ===== -->
 
         </div>
+
+        <!-- ===== START: Customer Member Portal View (WARISHAYDAY Farm Game Store) ===== -->
+        <div id="customer-member-view" class="view" style="display: none;">
+            <!-- Member Header / Navigation -->
+            <header class="member-portal-header">
+                <div class="member-header-brand" onclick="switchMemberSubpage('dashboard')" style="cursor: pointer;">
+                    <div class="member-brand-logo">🌾</div>
+                    <div class="member-brand-title">WARISHAYDAY</div>
+                </div>
+                <!-- Desktop Navigation -->
+                <nav class="member-desktop-nav">
+                    <button type="button" class="member-nav-btn active" data-page="dashboard">🏠 หน้าแรก</button>
+                    <button type="button" class="member-nav-btn" data-page="shop">🛒 สั่งสินค้า</button>
+                    <button type="button" class="member-nav-btn" data-page="orders">📦 คำสั่งซื้อ</button>
+                    <button type="button" class="member-nav-btn" data-page="credit">💰 เครดิต</button>
+                    <button type="button" class="member-nav-btn" data-page="tags">🏷️ แท็กรับสินค้า</button>
+                    <button type="button" class="member-nav-btn" data-page="profile">👤 บัญชีของฉัน</button>
+                </nav>
+                <div class="member-header-user-info">
+                    <div class="member-header-wallet" onclick="switchMemberSubpage('credit')" title="คลิกเพื่อดูประวัติเครดิต">
+                        <span class="wallet-icon">💰</span>
+                        <span id="member-header-balance">฿0.00</span>
+                    </div>
+                    <div class="member-header-profile" onclick="switchMemberSubpage('profile')" title="คลิกเพื่อดูโปรไฟล์">
+                        <span class="user-avatar">👤</span>
+                        <span id="member-header-name">สมาชิก</span>
+                    </div>
+                    <button type="button" class="btn-member-logout-header" id="btn-header-member-logout" title="ออกจากระบบ">🚪</button>
+                </div>
+            </header>
+
+            <!-- Sub-pages Container -->
+            <div class="member-subpages-container">
+                <!-- Subpage 1: Dashboard -->
+                <div id="member-subpage-dashboard" class="member-subpage active">
+                    <!-- Greeting & Member ID -->
+                    <div class="member-greeting-card">
+                        <div class="greeting-text-wrap">
+                            <h2>สวัสดี 👋 <span id="member-dash-name">คุณสมาชิก</span></h2>
+                            <p>ยินดีต้อนรับกลับสู่ WARISHAYDAY — แหล่งรวมสินค้าและบริการ Hay Day อันดับ 1</p>
+                        </div>
+                        <div class="member-id-pill">
+                            <span class="id-label">Member ID:</span>
+                            <span class="id-val" id="member-dash-id">#000000</span>
+                            <button type="button" class="btn-copy-member-id" id="btn-copy-member-id" title="คัดลอก Member ID">📋 Copy</button>
+                        </div>
+                    </div>
+
+                    <!-- Hero 2 Cards: Credit Card & Shop CTA -->
+                    <div class="member-hero-grid">
+                        <!-- Credit Card -->
+                        <div class="member-hero-card credit-hero-card">
+                            <div class="card-glow-bg"></div>
+                            <div class="card-inner">
+                                <div class="card-top-row">
+                                    <div class="card-chip">💰 เครดิตของฉัน</div>
+                                    <button type="button" class="btn-refresh-credit" id="btn-member-refresh-credit" title="รีเฟรชเครดิต">🔄</button>
+                                </div>
+                                <div class="card-balance-row">
+                                    <span class="card-currency">฿</span>
+                                    <span class="card-balance" id="member-dash-balance">0.00</span>
+                                </div>
+                                <div class="card-footer-row">
+                                    <span class="balance-sublabel">เครดิตคงเหลือในกระเป๋า</span>
+                                    <button type="button" class="btn-hero-topup" id="btn-dash-topup">
+                                        <span>+ เติมเครดิต</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shop CTA Card -->
+                        <div class="member-hero-card shop-cta-card" id="btn-hero-order" onclick="switchMemberSubpage('shop')">
+                            <div class="card-glow-bg shop-glow"></div>
+                            <div class="card-inner">
+                                <div class="shop-cta-icon">🛒</div>
+                                <h3 class="shop-cta-title">สั่งสินค้า Hay Day</h3>
+                                <p class="shop-cta-desc">เลือกสินค้า อัปเกรด เหรียญ เพชร และแพ็กเกจที่คุณต้องการได้เลย</p>
+                                <div class="shop-cta-btn-wrap">
+                                    <span class="shop-cta-btn">เริ่มสั่งซื้อสินค้า »</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions (2x2 Grid on Mobile, 4x1 on Desktop) -->
+                    <div class="member-section-title">⚡ เมนูด่วน (Quick Actions)</div>
+                    <div class="quick-actions-grid">
+                        <div class="quick-action-item qa-shop" onclick="switchMemberSubpage('shop')">
+                            <div class="qa-icon">🛒</div>
+                            <div class="qa-label">สั่งสินค้า</div>
+                            <div class="qa-sub">เลือกสินค้าหน้าร้าน</div>
+                        </div>
+                        <div class="quick-action-item qa-topup" onclick="openMemberTopupModal()">
+                            <div class="qa-icon">💰</div>
+                            <div class="qa-label">เติมเครดิต</div>
+                            <div class="qa-sub">โอนเงิน & แนบสลิป</div>
+                        </div>
+                        <div class="quick-action-item qa-orders" onclick="switchMemberSubpage('orders')">
+                            <div class="qa-icon">📦</div>
+                            <div class="qa-label">คำสั่งซื้อ</div>
+                            <div class="qa-sub">ดูประวัติออเดอร์</div>
+                        </div>
+                        <div class="quick-action-item qa-tags" onclick="switchMemberSubpage('tags')">
+                            <div class="qa-icon">🏷️</div>
+                            <div class="qa-label">แท็กรับสินค้า</div>
+                            <div class="qa-sub">จัดการแท็กฟาร์ม</div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Summary Stats -->
+                    <div class="member-summary-stats-grid">
+                        <div class="summary-stat-box">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-info">
+                                <div class="stat-lbl">เครดิตคงเหลือ</div>
+                                <div class="stat-num" id="stat-dash-credit">฿0.00</div>
+                            </div>
+                        </div>
+                        <div class="summary-stat-box">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-info">
+                                <div class="stat-lbl">คำสั่งซื้อทั้งหมด</div>
+                                <div class="stat-num" id="stat-dash-orders">0</div>
+                            </div>
+                        </div>
+                        <div class="summary-stat-box">
+                            <div class="stat-icon">🏷️</div>
+                            <div class="stat-info">
+                                <div class="stat-lbl">แท็กฟาร์มของฉัน</div>
+                                <div class="stat-num" id="stat-dash-tags">0</div>
+                            </div>
+                        </div>
+                        <div class="summary-stat-box">
+                            <div class="stat-icon">💳</div>
+                            <div class="stat-info">
+                                <div class="stat-lbl">เติมเครดิตสะสม</div>
+                                <div class="stat-num" id="stat-dash-total-deposit">฿0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Tags Section -->
+                    <div class="member-tags-dashboard-card">
+                        <div class="section-header-flex">
+                            <div class="title-with-badge">
+                                <span class="section-icon">🏷️</span>
+                                <span class="section-title-text">แท็กรับสินค้าของฉัน</span>
+                                <span class="tag-counter-pill" id="member-dash-tag-counter">0 Tags</span>
+                            </div>
+                            <button type="button" class="btn-pill-add-tag" onclick="openMemberAddTagModal()">+ เพิ่มแท็ก</button>
+                        </div>
+                        <div class="dash-tags-chips-container" id="member-dash-tags-list">
+                            <!-- Dynamic tag chips -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Section -->
+                    <div class="member-recent-orders-card">
+                        <div class="section-header-flex">
+                            <div class="title-with-badge">
+                                <span class="section-icon">📦</span>
+                                <span class="section-title-text">คำสั่งซื้อล่าสุด</span>
+                            </div>
+                            <a href="#" onclick="switchMemberSubpage('orders'); return false;" class="link-view-all">ดูทั้งหมด »</a>
+                        </div>
+                        <div class="recent-orders-list" id="member-dash-recent-orders">
+                            <!-- Dynamic recent orders -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subpage 2: Orders -->
+                <div id="member-subpage-orders" class="member-subpage">
+                    <div class="subpage-header">
+                        <h2>📦 คำสั่งซื้อของฉัน</h2>
+                        <p>ติดตามสถานะและตรวจสอบรายละเอียดคำสั่งซื้อทั้งหมดของคุณ</p>
+                    </div>
+                    <!-- Filter Bar -->
+                    <div class="orders-filter-container">
+                        <div class="filter-pills-group" id="order-time-filters">
+                            <button type="button" class="btn-filter-pill active" data-time="all">ทั้งหมด</button>
+                            <button type="button" class="btn-filter-pill" data-time="today">วันนี้</button>
+                            <button type="button" class="btn-filter-pill" data-time="week">สัปดาห์นี้</button>
+                            <button type="button" class="btn-filter-pill" data-time="month">เดือนนี้</button>
+                            <button type="button" class="btn-filter-pill" data-time="year">ปีนี้</button>
+                        </div>
+                        <div class="filter-pills-group" id="order-status-filters" style="margin-top: 8px;">
+                            <button type="button" class="btn-filter-pill active" data-status="ALL">ทุกสถานะ</button>
+                            <button type="button" class="btn-filter-pill" data-status="PENDING">รอดำเนินการ</button>
+                            <button type="button" class="btn-filter-pill" data-status="PROCESSING">กำลังดำเนินการ</button>
+                            <button type="button" class="btn-filter-pill" data-status="COMPLETED">สำเร็จ</button>
+                            <button type="button" class="btn-filter-pill" data-status="CANCELLED">ยกเลิก</button>
+                        </div>
+                    </div>
+                    <div class="orders-cards-container" id="member-all-orders-list">
+                        <!-- Dynamic order cards -->
+                    </div>
+                </div>
+
+                <!-- Subpage 3: Credit -->
+                <div id="member-subpage-credit" class="member-subpage">
+                    <div class="subpage-header">
+                        <h2>💰 กระเป๋าเครดิต (Wallet)</h2>
+                        <p>จัดการเครดิต เติมเงิน และตรวจสอบประวัติการใช้งานของคุณ</p>
+                    </div>
+                    <div class="credit-overview-grid">
+                        <div class="credit-summary-card cur-balance-card">
+                            <div class="csc-label">เครดิตปัจจุบัน</div>
+                            <div class="csc-val" id="credit-page-balance">฿0.00</div>
+                            <button type="button" class="btn-topup-main" onclick="openMemberTopupModal()">+ เติมเครดิต</button>
+                        </div>
+                        <div class="credit-summary-card deposit-card">
+                            <div class="csc-label">เติมเครดิตทั้งหมด</div>
+                            <div class="csc-val text-green" id="credit-page-total-deposit">฿0.00</div>
+                        </div>
+                        <div class="credit-summary-card spent-card">
+                            <div class="csc-label">ใช้ไปแล้ว</div>
+                            <div class="csc-val text-red" id="credit-page-total-spent">฿0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="credit-transactions-section">
+                        <h3 style="font-size: 1.15rem; margin-bottom: 12px; color: #1e293b;">ประวัติรายการเครดิต</h3>
+                        <div class="tx-ledger-list" id="member-tx-ledger-list">
+                            <!-- Dynamic transactions -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subpage 4: Tags -->
+                <div id="member-subpage-tags" class="member-subpage">
+                    <div class="subpage-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h2>🏷️ แท็กรับสินค้า</h2>
+                            <p>จัดการแท็กฟาร์ม Hay Day ของคุณสำหรับส่งสินค้า (สูงสุด 10 แท็ก)</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="openMemberAddTagModal()" style="border-radius: 12px; padding: 10px 18px;">
+                            <span>+ เพิ่มแท็กรับสินค้า</span>
+                        </button>
+                    </div>
+                    <div class="tags-cards-grid" id="member-tags-page-grid">
+                        <!-- Dynamic tag cards -->
+                    </div>
+                </div>
+
+                <!-- Subpage 5: Profile -->
+                <div id="member-subpage-profile" class="member-subpage">
+                    <div class="subpage-header">
+                        <h2>👤 บัญชีของฉัน</h2>
+                        <p>จัดการข้อมูลส่วนตัวและรหัสผ่านเข้าสู่ระบบ</p>
+                    </div>
+                    <div class="profile-cards-grid">
+                        <div class="profile-info-card">
+                            <h3 style="margin-top:0; font-size: 1.15rem; margin-bottom: 16px;">ข้อมูลสมาชิก</h3>
+                            <div class="profile-field-row">
+                                <span class="pfl-label">Member ID:</span>
+                                <span class="pfl-val" id="prof-member-id">#000000</span>
+                            </div>
+                            <div class="profile-field-row">
+                                <span class="pfl-label">ชื่อผู้ใช้ (Username):</span>
+                                <span class="pfl-val" id="prof-username">-</span>
+                            </div>
+                            <div class="profile-field-row">
+                                <span class="pfl-label">ชื่อ - นามสกุล:</span>
+                                <span class="pfl-val" id="prof-fullname">-</span>
+                            </div>
+                            <div class="profile-field-row">
+                                <span class="pfl-label">เบอร์โทรศัพท์:</span>
+                                <span class="pfl-val" id="prof-phone">-</span>
+                            </div>
+                            <div class="profile-field-row">
+                                <span class="pfl-label">วันที่สมัคร:</span>
+                                <span class="pfl-val" id="prof-registered">-</span>
+                            </div>
+                            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-secondary" onclick="openMemberEditProfileModal()">แก้ไขข้อมูล</button>
+                                <button type="button" class="btn btn-secondary" onclick="openMemberChangePasswordModal()">เปลี่ยน Password</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Bottom Navigation Bar -->
+            <nav class="customer-bottom-nav" id="customer-bottom-nav">
+                <button type="button" class="bottom-nav-item active" data-page="dashboard">
+                    <span class="bn-icon">🏠</span>
+                    <span class="bn-label">หน้าแรก</span>
+                </button>
+                <button type="button" class="bottom-nav-item" data-page="shop">
+                    <span class="bn-icon">🛒</span>
+                    <span class="bn-label">สั่งสินค้า</span>
+                </button>
+                <button type="button" class="bottom-nav-item" data-page="orders">
+                    <span class="bn-icon">📦</span>
+                    <span class="bn-label">คำสั่งซื้อ</span>
+                </button>
+                <button type="button" class="bottom-nav-item" data-page="credit">
+                    <span class="bn-icon">💰</span>
+                    <span class="bn-label">เครดิต</span>
+                </button>
+                <button type="button" class="bottom-nav-item" data-page="profile">
+                    <span class="bn-icon">👤</span>
+                    <span class="bn-label">บัญชี</span>
+                </button>
+            </nav>
+        </div>
+        <!-- ===== END: Customer Member Portal View ===== -->
 
         <div id="admin-login-view" class="view">
             <div class="card">
@@ -3158,6 +3548,44 @@
                                 <button class="btn btn-secondary btn-small" id="member-prev-page-btn" disabled>« Previous</button>
                                 <div id="member-pagination-numbers" class="page-numbers-group"></div>
                                 <button class="btn btn-secondary btn-small" id="member-next-page-btn" disabled>Next »</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submenu: Member Registrations Management (คำร้องสมัครสมาชิก) -->
+                <div id="admin-sub-member-registrations" class="admin-sub-content">
+                    <div class="credit-requests-container">
+                        <div class="credit-requests-header">
+                            <div class="credit-filter-tabs">
+                                <button class="credit-tab-btn active reg-filter-btn" data-status="PENDING">รออนุมัติ (<span id="reg-count-pending">0</span>)</button>
+                                <button class="credit-tab-btn reg-filter-btn" data-status="ACTIVE">อนุมัติแล้ว (<span id="reg-count-active">0</span>)</button>
+                                <button class="credit-tab-btn reg-filter-btn" data-status="REJECTED">ปฏิเสธแล้ว (<span id="reg-count-rejected">0</span>)</button>
+                                <button class="credit-tab-btn reg-filter-btn" data-status="ALL">ทั้งหมด (<span id="reg-count-all">0</span>)</button>
+                            </div>
+                            <button class="btn btn-secondary btn-small" id="btn-refresh-member-registrations">🔄 รีเฟรช</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="member-modern-table" id="member-registrations-table">
+                                <thead>
+                                    <tr>
+                                        <th>วันที่สมัคร</th>
+                                        <th>Username</th>
+                                        <th>ชื่อ-นามสกุล</th>
+                                        <th>Hay Day Player Tags</th>
+                                        <th>สถานะ</th>
+                                        <th style="text-align: center;">ดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="member-registrations-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div id="member-registrations-empty" class="member-empty-state" style="display: none;">
+                                <div class="empty-icon">📝</div>
+                                <h3>ไม่มีรายการคำร้องสมัครสมาชิก</h3>
+                                <p>เมื่อมีผู้สมัครสมาชิกเข้ามาใหม่ รายการจะแสดงขึ้นที่นี่เพื่อให้ผู้ดูแลระบบอนุมัติ</p>
                             </div>
                         </div>
                     </div>
@@ -6423,6 +6851,352 @@
         </div>
     </div>
 
+    <!-- 7. Customer Member Login Modal -->
+    <div id="customer-login-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 440px; width: 92%; border-radius: 20px; padding: 28px 24px; position: relative;">
+            <span class="close-modal" id="close-customer-login-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 2.2rem; margin-bottom: 6px;">🔐</div>
+                <h3 style="margin: 0; font-size: 1.35rem; color: var(--text-color); font-weight: 700;">เข้าสู่ระบบสมาชิก</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.88rem;">เข้าสู่ระบบเพื่อใช้เครดิตและสิทธิประโยชน์ของคุณ</p>
+            </div>
+            <form id="customer-login-form">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label for="cust-login-username" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">ชื่อผู้ใช้ (Username)</label>
+                    <input type="text" id="cust-login-username" class="form-control" placeholder="กรอกชื่อผู้ใช้ของคุณ" required autocomplete="username">
+                </div>
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label for="cust-login-password" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">รหัสผ่าน</label>
+                    <input type="password" id="cust-login-password" class="form-control" placeholder="กรอกรหัสผ่าน" required autocomplete="current-password">
+                </div>
+                <div id="cust-login-error" style="display: none; color: #ef4444; background: #fee2e2; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
+                <button type="submit" id="cust-login-submit-btn" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">
+                    <span>เข้าสู่ระบบ</span>
+                </button>
+                <div style="text-align: center; margin-top: 14px;">
+                    <a href="#" onclick="document.getElementById('customer-login-modal').style.display='none'; openPublicMemberRegisterModal(); return false;" style="color: #0284c7; text-decoration: none; font-size: 0.88rem; font-weight: 600;">ยังไม่มีบัญชี? สมัครสมาชิกที่นี่</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 8. Customer Credit Top-up Modal -->
+    <div id="customer-topup-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 480px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative;">
+            <span class="close-modal" id="close-customer-topup-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="text-align: center; margin-bottom: 18px;">
+                <div style="font-size: 2rem; margin-bottom: 4px;">💰</div>
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">เติมเครดิตสมาชิก</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">โอนเงินและแนบสลิปเพื่อเพิ่มเครดิตในกระเป๋าของคุณ</p>
+            </div>
+            
+            <form id="customer-topup-form">
+                <!-- Shop Payment Info Card -->
+                <div class="topup-payment-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-radius: 14px; padding: 14px; margin-bottom: 16px; border: 1px solid #bae6fd; text-align: center;">
+                    <div style="font-weight: 700; color: #0369a1; font-size: 0.95rem; margin-bottom: 4px;">ช่องทางชำระเงิน (พร้อมเพย์ / บัญชีร้าน)</div>
+                    <div id="topup-promptpay-info" style="font-size: 0.9rem; color: #334155; font-weight: 600;">สแกน QR Code หน้าร้าน หรือโอนเข้าบัญชีพร้อมเพย์</div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="topup-amount-input" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">จำนวนเงินที่ต้องการเติม (บาท) <span style="color:#ef4444;">*</span></label>
+                    <input type="number" id="topup-amount-input" class="form-control" placeholder="เช่น 100" min="1" step="any" required style="font-size: 1.1rem; font-weight: 700; color: #0284c7;">
+                    <div class="quick-amount-pills" style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                        <button type="button" class="btn-amount-pill" onclick="document.getElementById('topup-amount-input').value = 50;">฿50</button>
+                        <button type="button" class="btn-amount-pill" onclick="document.getElementById('topup-amount-input').value = 100;">฿100</button>
+                        <button type="button" class="btn-amount-pill" onclick="document.getElementById('topup-amount-input').value = 300;">฿300</button>
+                        <button type="button" class="btn-amount-pill" onclick="document.getElementById('topup-amount-input').value = 500;">฿500</button>
+                        <button type="button" class="btn-amount-pill" onclick="document.getElementById('topup-amount-input').value = 1000;">฿1,000</button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">แนบรูปภาพสลิปการโอนเงิน <span style="color:#ef4444;">*</span></label>
+                    <div class="slip-upload-dropzone" id="topup-slip-dropzone" onclick="document.getElementById('topup-slip-file').click()">
+                        <div id="topup-slip-placeholder">
+                            <span style="font-size: 1.8rem; display: block; margin-bottom: 4px;">📸</span>
+                            <span style="font-size: 0.86rem; font-weight: 600; color: #0284c7;">คลิกเพื่ออัปโหลดสลิป</span>
+                            <span style="display: block; font-size: 0.76rem; color: #94a3b8;">รองรับรูปภาพ JPG, PNG</span>
+                        </div>
+                        <img id="topup-slip-preview" src="" alt="สลิปโอนเงิน" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    </div>
+                    <input type="file" id="topup-slip-file" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label for="topup-notes-input" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">หมายเหตุ (ถ้ามี)</label>
+                    <input type="text" id="topup-notes-input" class="form-control" placeholder="เช่น โอนจากกสิกร เวลา 12:30">
+                </div>
+
+                <div id="topup-error-msg" style="display: none; color: #ef4444; background: #fee2e2; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
+                <div id="topup-success-msg" style="display: none; color: #059669; background: #d1fae5; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
+
+                <button type="submit" id="btn-submit-topup" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">
+                    <span>🚀 ยืนยันการแจ้งเติมเครดิต</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 9. Customer Credit History Modal -->
+    <div id="customer-credit-history-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 650px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative; max-height: 85vh; overflow-y: auto;">
+            <span class="close-modal" id="close-customer-credit-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">📜 ประวัติเครดิตของฉัน</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">รายการเติมเงิน การสั่งซื้อ และการปรับยอดเครดิต</p>
+            </div>
+
+            <!-- Ledger Summary Mini Cards -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;">
+                <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 10px; text-align: center;">
+                    <div style="font-size: 0.76rem; color: #0369a1; font-weight: 600;">เครดิตคงเหลือ</div>
+                    <div id="cust-ledger-balance" style="font-size: 1.15rem; font-weight: 700; color: #0284c7;">฿0.00</div>
+                </div>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 10px; text-align: center;">
+                    <div style="font-size: 0.76rem; color: #15803d; font-weight: 600;">ยอดเติมสะสม</div>
+                    <div id="cust-ledger-total-deposit" style="font-size: 1.15rem; font-weight: 700; color: #16a34a;">฿0.00</div>
+                </div>
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 10px; text-align: center;">
+                    <div style="font-size: 0.76rem; color: #b91c1c; font-weight: 600;">ยอดใช้จ่ายสะสม</div>
+                    <div id="cust-ledger-total-spent" style="font-size: 1.15rem; font-weight: 700; color: #dc2626;">฿0.00</div>
+                </div>
+            </div>
+
+            <div class="table-wrapper" style="max-height: 380px; overflow-y: auto;">
+                <table class="member-modern-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>ประเภท</th>
+                            <th>จำนวนเงิน</th>
+                            <th>คงเหลือ</th>
+                            <th>รายละเอียด</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cust-credit-history-body">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+                <div id="cust-credit-history-empty" class="member-empty-state" style="display: none; padding: 30px 10px;">
+                    <div class="empty-icon">📜</div>
+                    <h4>ยังไม่มีประวัติการทำรายการ</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Customer Orders Modal -->
+    <div id="customer-orders-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 680px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative; max-height: 85vh; overflow-y: auto;">
+            <span class="close-modal" id="close-customer-orders-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">📦 ประวัติคำสั่งซื้อของฉัน</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">รายการสั่งซื้อสินค้าของแท็กฟาร์มของคุณ</p>
+            </div>
+
+            <div class="table-wrapper" style="max-height: 420px; overflow-y: auto;">
+                <table class="member-modern-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>เลขออเดอร์</th>
+                            <th>วันที่</th>
+                            <th>แท็กฟาร์ม</th>
+                            <th>ยอดรวม</th>
+                            <th>การชำระเงิน</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cust-orders-history-body">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+                <div id="cust-orders-history-empty" class="member-empty-state" style="display: none; padding: 30px 10px;">
+                    <div class="empty-icon">📦</div>
+                    <h4>ยังไม่มีคำสั่งซื้อ</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Customer Tags Modal -->
+    <div id="customer-tags-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 500px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative; max-height: 85vh; overflow-y: auto;">
+            <span class="close-modal" id="close-customer-tags-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">🌾 จัดการแท็กฟาร์มของฉัน</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">เพิ่มหรือลบแท็กฟาร์มสำหรับรับสินค้า (สูงสุด 10 แท็ก)</p>
+            </div>
+
+            <div id="cust-tags-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px;">
+                <!-- Dynamic Tag Rows -->
+            </div>
+
+            <!-- Add new tag section -->
+            <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 14px; padding: 14px;">
+                <div style="font-weight: 600; font-size: 0.88rem; color: #334155; margin-bottom: 8px;">+ เพิ่มแท็กฟาร์มใหม่</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <div class="tag-input-wrapper" style="flex: 1;">
+                        <span class="tag-hash-prefix">#</span>
+                        <input type="text" id="cust-add-tag-code" class="form-control pub-reg-tag-input" placeholder="เช่น LJV8U8QGU" style="text-transform: uppercase;">
+                    </div>
+                    <input type="text" id="cust-add-tag-name" class="form-control" placeholder="ชื่อฟาร์ม (เช่น ฟาร์ม 2)" style="width: 140px;">
+                </div>
+                <div id="cust-add-tag-error" style="display: none; color: #ef4444; font-size: 0.8rem; margin-bottom: 6px;"></div>
+                <button type="button" id="btn-cust-add-tag-confirm" class="btn btn-primary btn-small" style="width: 100%; border-radius: 10px;">
+                    <span>+ บันทึกแท็ก</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Member Order Detail Modal -->
+    <div id="member-order-detail-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 550px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative; max-height: 85vh; overflow-y: auto;">
+            <span class="close-modal" id="close-member-order-detail-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">📦 รายละเอียดคำสั่งซื้อ</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;" id="mod-ord-id">Order ID: -</p>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.88rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #64748b;">วันที่สั่งซื้อ:</span>
+                    <span id="mod-ord-date" style="font-weight: 600;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #64748b;">แท็กรับสินค้า:</span>
+                    <span id="mod-ord-tag" style="font-weight: 700; color: #0284c7;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #64748b;">วิธีชำระเงิน:</span>
+                    <span id="mod-ord-payment" style="font-weight: 600;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #64748b;">สถานะ:</span>
+                    <span id="mod-ord-status" class="badge-reg-status badge-reg-pending">-</span>
+                </div>
+            </div>
+
+            <h4 style="margin: 0 0 8px; font-size: 0.95rem; color: #334155;">รายการสินค้า</h4>
+            <div id="mod-ord-items-list" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; margin-bottom: 16px; max-height: 180px; overflow-y: auto;">
+                <!-- Dynamic items -->
+            </div>
+
+            <!-- Credit Breakdown Section -->
+            <div id="mod-ord-credit-breakdown" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.88rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: #166534;">เครดิตก่อนสั่งซื้อ:</span>
+                    <span id="mod-ord-credit-before" style="font-weight: 600;">฿0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: #dc2626;">หักเครดิต:</span>
+                    <span id="mod-ord-credit-deducted" style="font-weight: 700; color: #dc2626;">-฿0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px dashed #86efac; padding-top: 4px;">
+                    <span style="color: #166534; font-weight: 700;">เครดิตหลังสั่งซื้อ:</span>
+                    <span id="mod-ord-credit-after" style="font-weight: 800; color: #15803d;">฿0.00</span>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; font-weight: 800; padding: 8px 0; border-top: 2px solid #e2e8f0;">
+                <span>ยอดรวมทั้งสิ้น:</span>
+                <span id="mod-ord-total" style="color: #0284c7;">฿0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 13. Member Insufficient Credit Modal -->
+    <div id="member-insufficient-credit-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 440px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative; text-align: center;">
+            <span class="close-modal" id="close-member-insufficient-credit-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="font-size: 2.8rem; margin-bottom: 8px;">💰</div>
+            <h3 style="margin: 0; font-size: 1.35rem; color: #dc2626; font-weight: 800;">เครดิตไม่เพียงพอ</h3>
+            <p style="margin: 6px 0 16px; color: #64748b; font-size: 0.88rem;">ยอดเครดิตในกระเป๋าของคุณไม่พอสำหรับคำสั่งซื้อนี้</p>
+
+            <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 14px; padding: 14px; margin-bottom: 20px; text-align: left; font-size: 0.92rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #64748b;">เครดิตปัจจุบัน:</span>
+                    <span id="insuf-cur-balance" style="font-weight: 700; color: #1e293b;">฿0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: #64748b;">ยอดสั่งซื้อ:</span>
+                    <span id="insuf-order-total" style="font-weight: 700; color: #1e293b;">฿0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px dashed #fca5a5; padding-top: 8px; font-size: 1rem;">
+                    <span style="color: #b91c1c; font-weight: 700;">ขาดอีก:</span>
+                    <span id="insuf-missing-amount" style="font-weight: 800; color: #dc2626;">฿0.00</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('member-insufficient-credit-modal').style.display='none';" style="flex: 1; border-radius: 12px; padding: 12px;">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('member-insufficient-credit-modal').style.display='none'; openMemberTopupModal();" style="flex: 1.2; border-radius: 12px; padding: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <span>+ เติมเครดิต</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 14. Member Edit Profile Modal -->
+    <div id="member-edit-profile-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 440px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative;">
+            <span class="close-modal" id="close-member-edit-profile-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">👤 แก้ไขข้อมูลส่วนตัว</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">อัปเดตชื่อ นามสกุล และเบอร์โทรศัพท์ของคุณ</p>
+            </div>
+            <form id="member-edit-profile-form">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">ชื่อจริง</label>
+                    <input type="text" id="edit-prof-firstname" class="form-control" placeholder="ชื่อจริง">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">นามสกุล</label>
+                    <input type="text" id="edit-prof-lastname" class="form-control" placeholder="นามสกุล">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">เบอร์โทรศัพท์</label>
+                    <input type="tel" id="edit-prof-phone" class="form-control" placeholder="เบอร์โทรศัพท์">
+                </div>
+                <div id="edit-prof-error" style="display: none; color: #ef4444; font-size: 0.85rem; margin-bottom: 10px;"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('member-edit-profile-modal').style.display='none';">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 15. Member Change Password Modal -->
+    <div id="member-change-password-modal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 440px; width: 92%; border-radius: 20px; padding: 26px 24px; position: relative;">
+            <span class="close-modal" id="close-member-change-pw-modal" style="font-size: 26px; cursor: pointer; position: absolute; right: 20px; top: 16px; color: #94a3b8;">&times;</span>
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-color); font-weight: 700;">🔒 เปลี่ยนรหัสผ่าน</h3>
+                <p style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">กรุณากรอกรหัสผ่านปัจจุบันและรหัสผ่านใหม่</p>
+            </div>
+            <form id="member-change-pw-form">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">รหัสผ่านปัจจุบัน <span style="color:#ef4444;">*</span></label>
+                    <input type="password" id="chg-pw-current" class="form-control" required autocomplete="current-password">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร) <span style="color:#ef4444;">*</span></label>
+                    <input type="password" id="chg-pw-new" class="form-control" minlength="6" required autocomplete="new-password">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 4px;">ยืนยันรหัสผ่านใหม่ <span style="color:#ef4444;">*</span></label>
+                    <input type="password" id="chg-pw-confirm" class="form-control" minlength="6" required autocomplete="new-password">
+                </div>
+                <div id="chg-pw-error" style="display: none; color: #ef4444; font-size: 0.85rem; margin-bottom: 10px;"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('member-change-password-modal').style.display='none';">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึกรหัสผ่านใหม่</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ===== END: Member Management Modals ===== -->
 
 
@@ -6527,6 +7301,7 @@
     </script>
 
     <script src="script.js?v=member2.3" defer></script>
+    <script src="customer-member.js?v=1.0" defer></script>
 </body>
 
 </html>

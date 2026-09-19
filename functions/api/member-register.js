@@ -88,10 +88,10 @@ export async function onRequestPost(context) {
     const passwordHash = await bcrypt.hash(password, 10);
     const now = new Date().toISOString();
 
-    // Insert member (no phone required)
+    // Insert member with PENDING status (awaiting admin approval)
     const insertRes = await env.DB.prepare(`
       INSERT INTO members (username, password_hash, first_name, last_name, phone, status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, '', 'ACTIVE', ?, ?)
+      VALUES (?, ?, ?, ?, '', 'PENDING', ?, ?)
     `).bind(
       trimmedUsername,
       passwordHash,
@@ -122,7 +122,7 @@ export async function onRequestPost(context) {
     // Log activity
     await env.DB.prepare(`
       INSERT INTO member_activities (member_id, activity_type, description, metadata, created_at)
-      VALUES (?, 'REGISTER', 'สมัครสมาชิกผ่านหน้าเว็บไซต์', ?, ?)
+      VALUES (?, 'REGISTER', 'สมัครสมาชิกผ่านหน้าเว็บไซต์ (รออนุมัติ)', ?, ?)
     `).bind(memberId, JSON.stringify({ 
       ip: request.headers.get('cf-connecting-ip') || 'unknown',
       tagCount: tagList.length
@@ -130,10 +130,11 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'สมัครสมาชิกสำเร็จ! ท่านสามารถเข้าสู่ระบบได้ทันที',
+      message: 'สมัครสมาชิกสำเร็จ! ข้อมูลของคุณอยู่ระหว่างรอผู้ดูแลระบบตรวจสอบและอนุมัติ',
       memberId: memberId,
       username: trimmedUsername,
       tagCount: tagList.length,
+      status: 'PENDING'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

@@ -1253,6 +1253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'member': {
             'member-dashboard': 'แดชบอร์ดสมาชิก',
             'member-list': 'จัดการสมาชิก',
+            'member-registrations': 'คำร้องสมัครสมาชิก',
             'credit-requests': 'คำขอเติมเครดิต',
             'audit-logs': 'ประวัติ Audit Log'
         },
@@ -1615,9 +1616,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const views = {
         customer: document.getElementById('customer-view'),
+        customerMember: document.getElementById('customer-member-view'),
         adminLogin: document.getElementById('admin-login-view'),
         adminPanel: document.getElementById('admin-panel-view'),
     };
+    window.switchView = switchView;
     const shopNameDisplay = document.getElementById('shop-name-display');
     const shopLogoDisplay = document.getElementById('shop-logo-display');
     const headerTitleContainer = document.getElementById('header-title-container');
@@ -3812,6 +3815,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             orderDetails.innerHTML = createConfirmOrderHTML(orderNumber);
+            if (typeof window.getActiveMemberTag === 'function' && window.getActiveMemberTag()) {
+                const tagInp = document.getElementById('order-tag-input');
+                if (tagInp && !tagInp.value) {
+                    tagInp.value = window.getActiveMemberTag();
+                }
+            }
             orderModal.style.display = 'flex';
         } else {
             const badge = document.getElementById('order-number-badge');
@@ -5431,6 +5440,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error("Invalid total price calculated.");
             }
 
+            // Member Credit Insufficient Check
+            if (typeof window.isMemberLoggedIn === 'function' && window.isMemberLoggedIn()) {
+                const memberBal = typeof window.getMemberBalance === 'function' ? window.getMemberBalance() : 0;
+                if (totalOrderPrice > memberBal) {
+                    const insufModal = document.getElementById('member-insufficient-credit-modal');
+                    if (insufModal) {
+                        const curEl = document.getElementById('insuf-cur-balance');
+                        const totEl = document.getElementById('insuf-order-total');
+                        const misEl = document.getElementById('insuf-missing-amount');
+                        if (curEl) curEl.textContent = '฿' + memberBal.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                        if (totEl) totEl.textContent = '฿' + totalOrderPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                        if (misEl) misEl.textContent = '฿' + (totalOrderPrice - memberBal).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                        insufModal.style.display = 'flex';
+                    }
+                    if (typeof Notify !== 'undefined' && Notify.warning) {
+                        Notify.warning('เครดิตไม่เพียงพอ', `ยอดสั่งซื้อ ฿${totalOrderPrice.toFixed(2)} แต่มีเครดิตคงเหลือ ฿${memberBal.toFixed(2)} กรุณาเติมเครดิตก่อนสั่งซื้อ`);
+                    }
+                    return;
+                }
+            }
+
             const newOrder = {
                 // ===== MODIFICATION (Order Number Fix) =====
                 id: orderNumber, // <-- Use the newly generated number
@@ -5753,6 +5783,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // แจ้งเตือนเข้าสู่ระบบสำเร็จ
                 Notify.success('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับ ${data.user.displayName || data.user.username}`);
+            } else if (data.isMember || (data.user && data.user.isMember)) {
+                // Customer Member Portal
+                localStorage.setItem('member_token', data.token);
+                localStorage.setItem('isMemberLoggedIn', 'true');
+                localStorage.setItem('currentMemberSession', JSON.stringify(data.user));
+
+                usernameInput.value = '';
+                passwordInput.value = '';
+                loginError.textContent = '';
+                adminGearIcon.style.display = 'none';
+                backToAdminBtn.style.display = 'none';
+                themeToggleBtn.style.display = 'none';
+                langToggleBtn.style.display = 'none';
+                if (floatingButtonsContainer) floatingButtonsContainer.classList.add('hidden');
+
+                switchView('customerMember');
+                if (typeof window.initMemberPortal === 'function') {
+                    await window.initMemberPortal();
+                }
+                if (typeof window.switchMemberSubpage === 'function') {
+                    window.switchMemberSubpage('dashboard');
+                }
+
+                Notify.success('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับคุณ ${data.user.displayName || data.user.username}`);
             } else {
                 // Super Admin
                 isAdminLoggedIn = true;
@@ -6809,13 +6863,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (subEl) subEl.classList.add('active');
 
                 if (activeSub === 'member-dashboard') {
-                    renderMemberDashboard();
+                    if (typeof renderMemberDashboard === 'function') renderMemberDashboard();
+                    else if (window.renderMemberDashboard) window.renderMemberDashboard();
                 } else if (activeSub === 'member-list') {
-                    renderMemberList();
+                    if (typeof renderMemberList === 'function') renderMemberList();
+                    else if (window.renderMemberList) window.renderMemberList();
+                } else if (activeSub === 'member-registrations') {
+                    if (typeof renderMemberRegistrations === 'function') renderMemberRegistrations();
+                    else if (window.renderMemberRegistrations) window.renderMemberRegistrations();
                 } else if (activeSub === 'credit-requests') {
-                    renderCreditRequests();
+                    if (typeof renderCreditRequests === 'function') renderCreditRequests();
+                    else if (window.renderCreditRequests) window.renderCreditRequests();
                 } else if (activeSub === 'audit-logs') {
-                    renderAuditLogs();
+                    if (typeof renderAuditLogs === 'function') renderAuditLogs();
+                    else if (window.renderAuditLogs) window.renderAuditLogs();
                 }
             }
         }
@@ -26142,6 +26203,147 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ===== Member Registrations Management (คำร้องสมัครสมาชิก) =====
+    let memberRegFilterStatus = 'PENDING';
+
+    const renderMemberRegistrations = async () => {
+        const tableBody = document.getElementById('member-registrations-body');
+        const emptyState = document.getElementById('member-registrations-empty');
+        if (!tableBody) return;
+
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: #94a3b8;">⏳ กำลังโหลดรายการคำร้อง...</td></tr>';
+        if (emptyState) emptyState.style.display = 'none';
+
+        try {
+            const res = await fetchWithAuth(`/api/admin/member-registrations?status=${memberRegFilterStatus}`);
+            if (!res.ok) throw new Error('Failed to load registrations');
+            const data = await res.json();
+            const registrations = data.registrations || [];
+
+            // Update tab counts
+            const pendingCountEl = document.getElementById('reg-count-pending');
+            if (pendingCountEl) pendingCountEl.textContent = data.pendingCount || 0;
+
+            if (registrations.length === 0) {
+                tableBody.innerHTML = '';
+                if (emptyState) emptyState.style.display = 'block';
+                return;
+            }
+
+            tableBody.innerHTML = registrations.map(r => {
+                const statusBadge = r.status === 'PENDING'
+                    ? '<span class="badge-reg-status badge-reg-pending">⏳ รออนุมัติ</span>'
+                    : r.status === 'ACTIVE'
+                        ? '<span class="badge-reg-status badge-reg-active">✅ อนุมัติแล้ว</span>'
+                        : '<span class="badge-reg-status badge-reg-rejected">❌ ปฏิเสธแล้ว</span>';
+
+                const tagsBadges = (r.tags || []).map(t =>
+                    `<span class="tag-chip" style="padding: 2px 8px; font-size: 0.78rem; margin: 2px; display: inline-block; background: #e0f2fe; color: #0369a1; border-radius: 6px;">#${escapeHtml(t.tag)}${t.tagName ? ` (${escapeHtml(t.tagName)})` : ''}</span>`
+                ).join('') || '<span style="color: #94a3b8;">-</span>';
+
+                const fullName = (r.firstName && r.lastName)
+                    ? `${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}`
+                    : (r.firstName || '-');
+
+                let actionButtons = '-';
+                if (r.status === 'PENDING') {
+                    actionButtons = `
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <button type="button" class="btn btn-small btn-success btn-approve-reg" onclick="handleRegistrationDecision(${r.id}, 'APPROVE', '${escapeHtml(r.username)}')" style="padding: 4px 12px; border-radius: 8px;">✅ อนุมัติ</button>
+                            <button type="button" class="btn btn-small btn-danger btn-reject-reg" onclick="handleRegistrationDecision(${r.id}, 'REJECT', '${escapeHtml(r.username)}')" style="padding: 4px 12px; border-radius: 8px;">❌ ไม่อนุมัติ</button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <tr>
+                        <td><small style="color: #64748b;">${formatDateTime(r.createdAt)}</small></td>
+                        <td>
+                            <strong>${escapeHtml(r.username)}</strong>
+                            <div style="font-size: 0.75rem; color: #94a3b8;">#${String(r.id).padStart(6, '0')}</div>
+                        </td>
+                        <td>${fullName}</td>
+                        <td style="max-width: 250px;">${tagsBadges}</td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align: center;">${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('');
+
+        } catch (err) {
+            console.error('renderMemberRegistrations error:', err);
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+            if (typeof Notify !== 'undefined' && Notify.error) {
+                Notify.error('ข้อผิดพลาด', 'ไม่สามารถโหลดคำร้องสมัครสมาชิกได้');
+            }
+        }
+    };
+
+    // Decision Handler (Approve / Reject)
+    window.handleRegistrationDecision = async (memberId, action, username) => {
+        const actionLabel = action === 'APPROVE' ? 'อนุมัติ' : 'ไม่อนุมัติ';
+        let reason = '';
+
+        if (action === 'REJECT') {
+            reason = prompt(`กรุณาระบุเหตุผลที่ไม่อนุมัติผู้ใช้ "${username}" (ถ้ามี):`, '');
+            if (reason === null) return; // Cancelled
+        } else {
+            if (!confirm(`คุณต้องการ${actionLabel}การสมัครสมาชิกของ "${username}" ใช่หรือไม่?`)) {
+                return;
+            }
+        }
+
+        try {
+            const res = await fetchWithAuth('/api/admin/member-registrations', {
+                method: 'POST',
+                body: JSON.stringify({ memberId, action, reason })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to process request');
+
+            if (typeof Notify !== 'undefined' && Notify.success) {
+                Notify.success('สำเร็จ', `${actionLabel}ผู้ใช้ "${username}" เรียบร้อยแล้ว`);
+            } else {
+                alert(`${actionLabel}เรียบร้อยแล้ว`);
+            }
+
+            renderMemberRegistrations();
+        } catch (err) {
+            console.error('handleRegistrationDecision error:', err);
+            if (typeof Notify !== 'undefined' && Notify.error) {
+                Notify.error('ข้อผิดพลาด', err.message);
+            } else {
+                alert(err.message);
+            }
+        }
+    };
+
+    // Setup Registration Filter Listeners
+    const setupMemberRegistrationListeners = () => {
+        document.querySelectorAll('.reg-filter-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.reg-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                memberRegFilterStatus = btn.dataset.status || 'PENDING';
+                renderMemberRegistrations();
+            };
+        });
+
+        const refreshBtn = document.getElementById('btn-refresh-member-registrations');
+        if (refreshBtn) {
+            refreshBtn.onclick = () => {
+                renderMemberRegistrations();
+            };
+        }
+    };
+
+    // Expose Admin Member Functions to Window
+    window.renderMemberDashboard = renderMemberDashboard;
+    window.renderMemberList = renderMemberList;
+    window.renderCreditRequests = renderCreditRequests;
+    window.renderAuditLogs = renderAuditLogs;
+    window.renderMemberRegistrations = renderMemberRegistrations;
+
     // Initialize Member Module
     const initMemberModule = () => {
         ensureMemberMenuOrder();
@@ -26150,6 +26352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAddMemberForm();
         setupMemberModalCloseHandlers();
         setupPublicMemberRegistration();
+        setupMemberRegistrationListeners();
     };
 
     initMemberModule();
