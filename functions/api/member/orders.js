@@ -22,7 +22,7 @@ export async function onRequestGet(context) {
 
   try {
     const url = new URL(request.url);
-    const orderId = url.searchParams.get('id');
+    const orderId = url.searchParams.get('orderNumber') || url.searchParams.get('id');
 
     // Get member's tags
     const tagsRes = await env.DB.prepare(
@@ -33,7 +33,7 @@ export async function onRequestGet(context) {
 
     if (orderId) {
       // Single order detail
-      let order = await env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(orderId).first();
+      let order = await env.DB.prepare('SELECT * FROM orders WHERE order_id = ?').bind(orderId).first();
       if (!order) {
         return new Response(JSON.stringify({ error: 'ไม่พบคำสั่งซื้อนี้' }), {
           status: 404,
@@ -52,31 +52,43 @@ export async function onRequestGet(context) {
       }
 
       // Check related wallet transaction for credit before/after
-      const tx = await env.DB.prepare(`
+      let tx = await env.DB.prepare(`
         SELECT balance_before, balance_after, amount
         FROM wallet_transactions
         WHERE member_id = ? AND reference = ?
       `).bind(memberId, orderId).first();
 
-      let parsedItems = [];
+      let parsedItems = {};
       try {
-        parsedItems = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
+        parsedItems = typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || {});
       } catch (_) {}
+
+      const creditBefore = tx ? Number(tx.balance_before) : (order.credit_before != null ? Number(order.credit_before) : null);
+      const creditAfter = tx ? Number(tx.balance_after) : (order.credit_after != null ? Number(order.credit_after) : null);
+      const creditDeducted = tx ? Number(tx.amount) : (order.total != null ? Number(order.total) : null);
 
       return new Response(JSON.stringify({
         success: true,
         order: {
-          id: order.id,
+          id: order.order_id,
+          orderNumber: order.order_id,
           total: Number(order.total) || 0,
-          customerTag: order.customer_tag,
-          paymentMethod: order.payment_method,
-          status: order.status,
-          createdAt: order.created_at,
+          totalAmount: Number(order.total) || 0,
+          customerTag: order.customer_tag || '',
+          customerEmail: order.customer_email || '',
+          paymentMethod: order.payment_method || 'PROMPTPAY',
+          status: order.status || 'PENDING',
+          createdAt: order.timestamp,
+          timestamp: order.timestamp,
           items: parsedItems,
-          note: order.note,
-          creditBefore: tx ? Number(tx.balance_before) : null,
-          creditAfter: tx ? Number(tx.balance_after) : null,
-          creditDeducted: tx ? Number(tx.amount) : null,
+          creditBefore,
+          creditAfter,
+          creditDeducted,
+          creditTransaction: (creditBefore !== null || creditAfter !== null) ? {
+            balanceBefore: creditBefore || 0,
+            balanceAfter: creditAfter || 0,
+            amount: creditDeducted || 0
+          } : null
         }
       }), {
         status: 200,
@@ -89,20 +101,20 @@ export async function onRequestGet(context) {
     if (tagList.length > 0) {
       const placeholders = tagList.map(() => '?').join(',');
       const query = `
-        SELECT id, total, customer_tag, payment_method, status, created_at, items, note
+        SELECT order_id, total, customer_tag, customer_email, payment_method, status, timestamp, items, credit_before, credit_after
         FROM orders
         WHERE member_id = ? OR UPPER(TRIM(customer_tag)) IN (${placeholders})
-        ORDER BY id DESC
+        ORDER BY timestamp DESC
         LIMIT 100
       `;
       const res = await env.DB.prepare(query).bind(memberId, ...tagList).all();
       orders = res.results || [];
     } else {
       const res = await env.DB.prepare(`
-        SELECT id, total, customer_tag, payment_method, status, created_at, items, note
+        SELECT order_id, total, customer_tag, customer_email, payment_method, status, timestamp, items, credit_before, credit_after
         FROM orders
         WHERE member_id = ?
-        ORDER BY id DESC
+        ORDER BY timestamp DESC
         LIMIT 100
       `).bind(memberId).all();
       orders = res.results || [];
@@ -111,21 +123,24 @@ export async function onRequestGet(context) {
     return new Response(JSON.stringify({
       success: true,
       orders: orders.map(o => {
-        let parsedItems = [];
+        let parsedItems = {};
         try {
-          parsedItems = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+          parsedItems = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || {});
         } catch (_) {}
 
         return {
-          id: o.id,
+          id: o.order_id,
+          orderNumber: o.order_id,
           total: Number(o.total) || 0,
-          customerTag: o.customer_tag,
-          paymentMethod: o.payment_method,
-          status: o.status,
-          createdAt: o.created_at,
+          totalAmount: Number(o.total) || 0,
+          customerTag: o.customer_tag || '',
+          paymentMethod: o.payment_method || 'PROMPTPAY',
+          status: o.status || 'PENDING',
+          createdAt: o.timestamp,
+          timestamp: o.timestamp,
           items: parsedItems,
-          itemCount: Array.isArray(parsedItems) ? parsedItems.reduce((sum, it) => sum + (Number(it.quantity) || 1), 0) : 0,
-          note: o.note
+          creditBefore: o.credit_before,
+          creditAfter: o.credit_after
         };
       })
     }), {

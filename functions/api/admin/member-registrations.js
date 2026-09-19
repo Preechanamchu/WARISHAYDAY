@@ -142,11 +142,12 @@ async function handleRegistrationAction(request, env, adminUser) {
 
     // Insert audit log
     await env.DB.prepare(`
-      INSERT INTO audit_logs (admin_id, action, target_type, target_id, before_data, after_data, reason, created_at)
-      VALUES (?, 'APPROVE_MEMBER_REGISTRATION', 'MEMBER', ?, ?, ?, ?, ?)
+      INSERT INTO audit_logs (admin_id, admin_name, action, target_type, target_id, before_val, after_val, reason, created_at)
+      VALUES (?, ?, 'APPROVE_MEMBER_REGISTRATION', 'MEMBER', ?, ?, ?, ?, ?)
     `).bind(
       adminId,
-      memberId,
+      adminUser.name || 'Admin',
+      String(memberId),
       JSON.stringify({ status: member.status }),
       JSON.stringify({ status: 'ACTIVE' }),
       reason || 'อนุมัติการสมัครสมาชิก',
@@ -180,11 +181,12 @@ async function handleRegistrationAction(request, env, adminUser) {
 
     // Insert audit log
     await env.DB.prepare(`
-      INSERT INTO audit_logs (admin_id, action, target_type, target_id, before_data, after_data, reason, created_at)
-      VALUES (?, 'REJECT_MEMBER_REGISTRATION', 'MEMBER', ?, ?, ?, ?, ?)
+      INSERT INTO audit_logs (admin_id, admin_name, action, target_type, target_id, before_val, after_val, reason, created_at)
+      VALUES (?, ?, 'REJECT_MEMBER_REGISTRATION', 'MEMBER', ?, ?, ?, ?, ?)
     `).bind(
       adminId,
-      memberId,
+      adminUser.name || 'Admin',
+      String(memberId),
       JSON.stringify({ status: member.status }),
       JSON.stringify({ status: 'REJECTED' }),
       reason || 'ปฏิเสธการสมัครสมาชิก',

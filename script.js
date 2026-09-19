@@ -5460,6 +5460,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Member Check
+            let memberSession = null;
+            try {
+                memberSession = JSON.parse(localStorage.getItem('currentMemberSession') || '{}');
+            } catch (e) {}
+            const isMember = (typeof window.isMemberLoggedIn === 'function' && window.isMemberLoggedIn());
+
             const newOrder = {
                 // ===== MODIFICATION (Order Number Fix) =====
                 id: orderNumber, // <-- Use the newly generated number
@@ -5472,6 +5479,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 customerTag: tagValue,
                 customerEmail: mailValue,
                 promoApplied: currentAppliedPromo,
+                memberId: isMember ? (memberSession?.id || null) : null,
+                paymentMethod: isMember ? 'CREDIT' : 'PROMPTPAY',
                 // ===== FIX: Include upgradeSnapshot in backend payload so it persists after refresh =====
                 upgradeSnapshot: (() => {
                     if (!appData.upgradeOrders || Object.keys(appData.upgradeOrders).length === 0) return {};
@@ -5495,6 +5504,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to save the order to the database.');
+            }
+
+            // Trigger event for member portal refresh
+            if (isMember) {
+                window.dispatchEvent(new CustomEvent('hayday:order-placed', { detail: { orderNumber, total: newOrder.total } }));
             }
 
             // ส่งออเดอร์ไปยังบอท HAYDAY AI

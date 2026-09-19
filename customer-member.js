@@ -85,9 +85,9 @@
             const data = await res.json();
             if (!data.success) throw new Error(data.error || 'Failed to load profile');
 
-            memberData = data;
-            if (data.tags && data.tags.length > 0) {
-                activeTag = data.tags[0].tag;
+            memberData = data.member || data;
+            if (memberData.tags && memberData.tags.length > 0) {
+                activeTag = memberData.tags[0].tag;
             }
 
             updateMemberVisibilityUI(true);
@@ -193,7 +193,7 @@
         if (statCredit) statCredit.textContent = formatCurrency(memberData.wallet?.balance || 0);
         if (statOrders) statOrders.textContent = (memberData.orderCount || 0).toLocaleString();
         if (statTags) statTags.textContent = (memberData.tags?.length || 0);
-        if (statDeposit) statDeposit.textContent = formatCurrency(memberData.wallet?.totalDeposited || 0);
+        if (statDeposit) statDeposit.textContent = formatCurrency(memberData.wallet?.totalDeposited || memberData.wallet?.totalDeposit || 0);
 
         // Tags List Widget
         renderDashboardTagsList();
@@ -523,7 +523,7 @@
 
         if (memberData && memberData.wallet) {
             if (balEl) balEl.textContent = formatCurrency(memberData.wallet.balance);
-            if (depEl) depEl.textContent = formatCurrency(memberData.wallet.totalDeposited);
+            if (depEl) depEl.textContent = formatCurrency(memberData.wallet.totalDeposited || memberData.wallet.totalDeposit || 0);
             if (spentEl) spentEl.textContent = formatCurrency(memberData.wallet.totalSpent);
         }
 
@@ -1210,6 +1210,13 @@
     // Auto-init on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', () => {
         setupMemberModals();
+        if (isMemberLoggedIn()) {
+            initMemberPortal();
+        }
+    });
+
+    // Listen for order-placed event to refresh member balance & dashboard
+    window.addEventListener('hayday:order-placed', () => {
         if (isMemberLoggedIn()) {
             initMemberPortal();
         }

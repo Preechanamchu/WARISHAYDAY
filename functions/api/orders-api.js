@@ -64,21 +64,42 @@ async function createOrder(orderData, env) {
   const storeId = orderData.storeId ? Number(orderData.storeId) : 1;
   const paymentMethod = String(orderData.paymentMethod || orderData.payment_method || 'PROMPTPAY').toUpperCase();
 
-  let memberId = null;
+  let memberId = orderData.memberId || orderData.member_id || null;
   let creditBefore = null;
   let creditAfter = null;
 
-  // Check if customer_tag matches any member
-  if (customerTagValue) {
+  // Check if customer_tag or memberId matches any member
+  if (customerTagValue || memberId) {
     try {
-      const cleanTag = String(customerTagValue).trim().toUpperCase();
-      const tagRow = await env.DB.prepare(`
-        SELECT ct.member_id, m.status, w.id as wallet_id, w.balance, w.total_spent
-        FROM customer_tags ct
-        JOIN members m ON m.id = ct.member_id
-        LEFT JOIN wallets w ON w.member_id = ct.member_id
-        WHERE UPPER(TRIM(ct.tag)) = ? AND ct.status = 'ACTIVE'
-      `).bind(cleanTag).first();
+      let tagRow = null;
+
+      if (memberId) {
+        tagRow = await env.DB.prepare(`
+          SELECT m.id as member_id, m.status, w.id as wallet_id, w.balance, w.total_spent
+          FROM members m
+          LEFT JOIN wallets w ON w.member_id = m.id
+          WHERE m.id = ?
+        `).bind(memberId).first();
+      }
+
+      if (!tagRow && customerTagValue) {
+        // Strip '#' and try matching candidate tags
+        const candidateTags = String(customerTagValue)
+          .split(',')
+          .map(t => t.trim().replace(/^#/, '').toUpperCase())
+          .filter(Boolean);
+
+        for (const candTag of candidateTags) {
+          tagRow = await env.DB.prepare(`
+            SELECT ct.member_id, m.status, w.id as wallet_id, w.balance, w.total_spent
+            FROM customer_tags ct
+            JOIN members m ON m.id = ct.member_id
+            LEFT JOIN wallets w ON w.member_id = ct.member_id
+            WHERE UPPER(TRIM(ct.tag)) = ? AND ct.status = 'ACTIVE'
+          `).bind(candTag).first();
+          if (tagRow) break;
+        }
+      }
 
       if (tagRow && tagRow.member_id) {
         memberId = tagRow.member_id;
