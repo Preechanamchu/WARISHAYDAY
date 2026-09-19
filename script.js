@@ -6029,7 +6029,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         appData.menuOrder.forEach(menuKey => {
-            let showMenuItem = isSuperAdmin || (loggedInUser && loggedInUser.permissions && loggedInUser.permissions[menuKey]);
+            let showMenuItem = isSuperAdmin || (loggedInUser && loggedInUser.permissions && loggedInUser.permissions[menuKey]) || (menuKey === 'member' && (!loggedInUser || isSuperAdmin || !loggedInUser.permissions || loggedInUser.permissions.member !== false));
 
             // ซ่อนเมนูจัดการแพ็คเกจสำหรับ Sub Admin
             if (!isSuperAdmin && (menuKey === 'admin-store-packages')) {
@@ -6798,7 +6798,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         
-        else if (activeAdminMenu === 'member' && canAccess('member')) {
+        else if (activeAdminMenu === 'member') {
             const container = document.getElementById('admin-menu-member');
             if (container) {
                 container.style.display = 'block';
