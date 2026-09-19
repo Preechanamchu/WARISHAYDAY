@@ -8615,6 +8615,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Color hex tags and preview box real-time updates
+    const bindColorSync = (inputId, tagId, boxId) => {
+        const inp = document.getElementById(inputId);
+        const tag = document.getElementById(tagId);
+        const box = document.getElementById(boxId);
+        if (inp) {
+            inp.addEventListener('input', () => {
+                if (tag) tag.textContent = inp.value;
+                if (box) box.style.backgroundColor = inp.value;
+            });
+        }
+    };
+    bindColorSync('success-animation-primary-color', 'primary-hex-tag', 'prim-color-preview');
+    bindColorSync('success-animation-secondary-color', 'secondary-hex-tag', 'sec-color-preview');
+    bindColorSync('success-text-color', 'text-hex-tag', 'text-color-preview');
+
+    // Replay button
+    const btnReplay = document.getElementById('btn-replay-animation');
+    if (btnReplay) {
+        btnReplay.addEventListener('click', () => {
+            showSuccessAnimation(document.getElementById('success-animation-preview-container'));
+        });
+    }
+
+    // D-Pad and Reset button
+    const updateSuccessPos = (dx, dy, isReset = false) => {
+        const xInput = document.getElementById('success-text-offset-x');
+        const yInput = document.getElementById('success-text-offset-y');
+        if (!xInput || !yInput) return;
+        if (isReset) {
+            xInput.value = 0;
+            yInput.value = 55;
+        } else {
+            if (dx !== 0) xInput.value = parseInt(xInput.value || 0) + dx;
+            if (dy !== 0) yInput.value = parseInt(yInput.value || 55) + dy;
+        }
+        xInput.dispatchEvent(new Event('input'));
+        yInput.dispatchEvent(new Event('input'));
+        showSuccessAnimation(document.getElementById('success-animation-preview-container'));
+    };
+
+    document.getElementById('pos-btn-up')?.addEventListener('click', () => updateSuccessPos(0, -5));
+    document.getElementById('pos-btn-down')?.addEventListener('click', () => updateSuccessPos(0, 5));
+    document.getElementById('pos-btn-left')?.addEventListener('click', () => updateSuccessPos(-5, 0));
+    document.getElementById('pos-btn-right')?.addEventListener('click', () => updateSuccessPos(5, 0));
+    document.getElementById('pos-btn-center')?.addEventListener('click', () => updateSuccessPos(0, 0, true));
+    document.getElementById('btn-pos-reset-quick')?.addEventListener('click', () => updateSuccessPos(0, 0, true));
+
     // Update range value displays in real-time
     document.getElementById('success-animation-size')?.addEventListener('input', function () {
         const display = document.getElementById('success-animation-size-value');
@@ -13217,26 +13265,123 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const closeCustomSuccessDropdown = () => {
+        const menu = document.getElementById('custom-dropdown-menu');
+        const trigger = document.getElementById('custom-dropdown-trigger');
+        if (menu) menu.classList.remove('open');
+        if (trigger) trigger.classList.remove('active');
+    };
+
+    const updateCustomDropdownSelection = (animKey) => {
+        const anim = SUCCESS_ANIMATIONS[animKey];
+        const triggerIcon = document.getElementById('trigger-anim-icon');
+        const triggerText = document.getElementById('trigger-anim-text');
+        const activeLabel = document.getElementById('active-style-label');
+
+        if (anim) {
+            if (triggerIcon) triggerIcon.textContent = anim.categoryIcon || '✨';
+            if (triggerText) triggerText.textContent = `${animKey}. ${anim.name}`;
+            if (activeLabel) activeLabel.textContent = `${animKey}. ${anim.name}`;
+        }
+
+        const items = document.querySelectorAll('.custom-dropdown-item');
+        items.forEach(item => {
+            if (item.dataset.value === animKey.toString()) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    };
+
+    const selectSuccessAnimation = (animKey) => {
+        const select = document.getElementById('success-animation-style');
+        if (select) {
+            select.value = animKey;
+            select.dispatchEvent(new Event('change'));
+            select.dispatchEvent(new Event('input'));
+        }
+        updateCustomDropdownSelection(animKey);
+        closeCustomSuccessDropdown();
+    };
+
     const populateSuccessAnimationSelector = () => {
         const select = document.getElementById('success-animation-style');
+        const customMenu = document.getElementById('custom-dropdown-menu');
         if (!select) return;
         select.innerHTML = '';
+        if (customMenu) customMenu.innerHTML = '';
 
-        // Create optgroup for each category
         for (const catKey in SUCCESS_ANIMATION_CATEGORIES) {
             const cat = SUCCESS_ANIMATION_CATEGORIES[catKey];
+            
+            // Native select optgroup
             const optgroup = document.createElement('optgroup');
             optgroup.label = `${cat.icon} ${cat.name}: ${cat.description}`;
 
+            // Custom menu group header
+            if (customMenu) {
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'dropdown-group-header';
+                groupHeader.textContent = `${cat.icon} ${cat.name}`;
+                customMenu.appendChild(groupHeader);
+            }
+
             for (const animKey in cat.animations) {
                 const anim = cat.animations[animKey];
+                
+                // Native option
                 const option = document.createElement('option');
                 option.value = animKey;
                 option.textContent = `${animKey}. ${anim.name}`;
                 optgroup.appendChild(option);
+
+                // Custom item (42px height, 10 items visible in 420px max-height scroll)
+                if (customMenu) {
+                    const item = document.createElement('div');
+                    item.className = 'custom-dropdown-item';
+                    item.dataset.value = animKey;
+                    item.innerHTML = `
+                        <div class="item-left">
+                            <span class="item-icon">${cat.icon}</span>
+                            <span class="item-text">${animKey}. ${anim.name}</span>
+                        </div>
+                        <span class="item-check">✓</span>
+                    `;
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectSuccessAnimation(animKey);
+                    });
+                    customMenu.appendChild(item);
+                }
             }
 
             select.appendChild(optgroup);
+        }
+
+        // Setup custom dropdown trigger event
+        const trigger = document.getElementById('custom-dropdown-trigger');
+        if (trigger && !trigger.dataset.initBound) {
+            trigger.dataset.initBound = 'true';
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = document.getElementById('custom-dropdown-menu');
+                if (menu) {
+                    const isOpen = menu.classList.toggle('open');
+                    trigger.classList.toggle('active', isOpen);
+                    if (isOpen) {
+                        const activeItem = menu.querySelector('.custom-dropdown-item.active');
+                        if (activeItem) activeItem.scrollIntoView({ block: 'nearest' });
+                    }
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('custom-dropdown-menu');
+                if (menu && !trigger.contains(e.target) && !menu.contains(e.target)) {
+                    closeCustomSuccessDropdown();
+                }
+            });
         }
     };
 
@@ -13244,13 +13389,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const settings = appData.shopSettings.successAnimation;
 
         // Set animation style selector
-        document.getElementById('success-animation-style').value = settings.style || '1';
-        document.getElementById('success-animation-size').value = settings.size || 100;
-        document.getElementById('success-animation-primary-color').value = settings.primaryColor || '#28a745';
-        document.getElementById('success-animation-secondary-color').value = settings.secondaryColor || '#ffffff';
-        document.getElementById('success-animation-text').value = settings.text || '';
-        document.getElementById('success-text-size').value = settings.textSize || 22;
-        document.getElementById('success-text-color').value = settings.textColor || '#ffffff';
+        const currentStyle = settings.style || '1';
+        const selectEl = document.getElementById('success-animation-style');
+        if (selectEl) selectEl.value = currentStyle;
+        updateCustomDropdownSelection(currentStyle);
+
+        const primInput = document.getElementById('success-animation-primary-color');
+        const secInput = document.getElementById('success-animation-secondary-color');
+        const textColInput = document.getElementById('success-text-color');
+
+        if (primInput) primInput.value = settings.primaryColor || '#28a745';
+        if (secInput) secInput.value = settings.secondaryColor || '#ffffff';
+        if (textColInput) textColInput.value = settings.textColor || '#ffffff';
+
+        const primHex = document.getElementById('primary-hex-tag');
+        const secHex = document.getElementById('secondary-hex-tag');
+        const textHex = document.getElementById('text-hex-tag');
+        const primBox = document.getElementById('prim-color-preview');
+        const secBox = document.getElementById('sec-color-preview');
+        const textBox = document.getElementById('text-color-preview');
+
+        if (primHex) primHex.textContent = settings.primaryColor || '#28a745';
+        if (secHex) secHex.textContent = settings.secondaryColor || '#ffffff';
+        if (textHex) textHex.textContent = settings.textColor || '#ffffff';
+        if (primBox) primBox.style.backgroundColor = settings.primaryColor || '#28a745';
+        if (secBox) secBox.style.backgroundColor = settings.secondaryColor || '#ffffff';
+        if (textBox) textBox.style.backgroundColor = settings.textColor || '#ffffff';
+
+        const sizeInput = document.getElementById('success-animation-size');
+        if (sizeInput) sizeInput.value = settings.size || 100;
+        const textInput = document.getElementById('success-animation-text');
+        if (textInput) textInput.value = settings.text || '';
+        const textSizeInput = document.getElementById('success-text-size');
+        if (textSizeInput) textSizeInput.value = settings.textSize || 22;
 
         // Position controls
         if (typeof settings.textPosition === 'object' && settings.textPosition !== null) {

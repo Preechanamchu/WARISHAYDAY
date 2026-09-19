@@ -1843,103 +1843,190 @@
                         </div>
                     </div>
                     <!-- ===== START: NEW SUCCESS SETTINGS SUBMENU ===== -->
-                    <div id="admin-sub-success-settings" class="admin-sub-content">
-                        <h2>🎉 ตั้งค่าอนิเมชั่น "สั่งซื้อสำเร็จ"</h2>
-                        <p style="color: #888; margin-bottom: 20px;">
-                            ปรับแต่งอนิเมชั่นที่แสดงเมื่อลูกค้าคัดลอกออเดอร์สำเร็จ</p>
-
-                        <div class="success-settings-layout">
-                            <!-- Controls Column -->
-                            <div class="success-controls-column">
-                                <!-- Animation Style Selector -->
-                                <div class="form-group">
-                                    <label for="success-animation-style">🎨 รูปแบบอนิเมชั่น</label>
-                                    <select id="success-animation-style" class="styled-select"></select>
-                                </div>
-
-                                <!-- Animation Size -->
-                                <div class="form-group">
-                                    <label for="success-animation-size">📐 ขนาดอนิเมชั่น
-                                        <span class="range-value-display" id="success-animation-size-value">100%</span>
-                                    </label>
-                                    <input type="range" id="success-animation-size" min="50" max="200" value="100">
-                                </div>
-
-                                <!-- Text Input (2 lines) -->
-                                <div class="form-group">
-                                    <label for="success-animation-text">💬 ข้อความ (2 บรรทัด)</label>
-                                    <textarea id="success-animation-text" rows="2"
-                                        placeholder="บรรทัดที่ 1&#10;บรรทัดที่ 2" style="resize: none;"></textarea>
-                                </div>
-
-                                <!-- Text Size -->
-                                <div class="form-group">
-                                    <label for="success-text-size">🔤 ขนาดตัวอักษร
-                                        <span class="range-value-display" id="success-text-size-value">16px</span>
-                                    </label>
-                                    <input type="range" id="success-text-size" min="8" max="48" value="16">
-                                </div>
-
-                                <!-- Colors Row -->
-                                <div class="form-group color-row">
-                                    <div class="color-item">
-                                        <label for="success-animation-primary-color">🎨 สีหลัก</label>
-                                        <input type="color" id="success-animation-primary-color" value="#28a745">
-                                    </div>
-                                    <div class="color-item">
-                                        <label for="success-animation-secondary-color">🎨 สีรอง</label>
-                                        <input type="color" id="success-animation-secondary-color" value="#ffffff">
-                                    </div>
-                                    <div class="color-item">
-                                        <label for="success-text-color">🔤 สีตัวอักษร</label>
-                                        <input type="color" id="success-text-color" value="#ffffff">
-                                    </div>
-                                </div>
-
-                                <!-- Position Controls -->
-                                <div class="form-group position-section">
-                                    <label>📍 ปรับตำแหน่งข้อความ</label>
-                                    <div class="position-controls-grid">
-                                        <div class="position-row">
-                                            <label>แนวนอน (X):</label>
-                                            <input type="number" id="success-text-offset-x" value="0" min="-100"
-                                                max="100">
-                                        </div>
-                                        <div class="position-row">
-                                            <label>แนวตั้ง (Y):</label>
-                                            <input type="number" id="success-text-offset-y" value="55" min="-100"
-                                                max="100">
-                                        </div>
-                                        <div class="position-buttons-mini">
-                                            <button type="button" class="pos-btn"
-                                                onclick="document.getElementById('success-text-offset-y').value = parseInt(document.getElementById('success-text-offset-y').value) - 5; showSuccessAnimation(document.getElementById('success-animation-preview-container'));">▲</button>
-                                            <div class="pos-btn-row">
-                                                <button type="button" class="pos-btn"
-                                                    onclick="document.getElementById('success-text-offset-x').value = parseInt(document.getElementById('success-text-offset-x').value) - 5; showSuccessAnimation(document.getElementById('success-animation-preview-container'));">◀</button>
-                                                <button type="button" class="pos-btn reset"
-                                                    onclick="document.getElementById('success-text-offset-x').value = 0; document.getElementById('success-text-offset-y').value = 55; showSuccessAnimation(document.getElementById('success-animation-preview-container'));">●</button>
-                                                <button type="button" class="pos-btn"
-                                                    onclick="document.getElementById('success-text-offset-x').value = parseInt(document.getElementById('success-text-offset-x').value) + 5; showSuccessAnimation(document.getElementById('success-animation-preview-container'));">▶</button>
-                                            </div>
-                                            <button type="button" class="pos-btn"
-                                                onclick="document.getElementById('success-text-offset-y').value = parseInt(document.getElementById('success-text-offset-y').value) + 5; showSuccessAnimation(document.getElementById('success-animation-preview-container'));">▼</button>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div id="admin-sub-success-settings" class="admin-sub-content modern-success-settings-panel">
+                        <!-- Header Banner -->
+                        <div class="success-header-banner">
+                            <div class="success-header-title-wrap">
+                                <h2>🎉 ตั้งค่าอนิเมชั่น "สั่งซื้อสำเร็จ"</h2>
+                                <p>ปรับแต่งอนิเมชั่นที่แสดงเมื่อลูกค้าคัดลอกสรุปออเดอร์สำเร็จ พร้อมดูการแสดงผลแบบเรียลไทม์</p>
                             </div>
-
-                            <!-- Preview Column -->
-                            <div class="success-preview-column">
-                                <label>👁️ ตัวอย่าง (คลิกเพื่อเล่นซ้ำ)</label>
-                                <div id="success-animation-preview-container" class="success-animation-preview"
-                                    onclick="showSuccessAnimation(this)">
-                                </div>
+                            <div class="success-header-pill">
+                                <span class="pill-badge-dot"></span>
+                                <span>30 รูปแบบอนิเมชั่น</span>
                             </div>
                         </div>
 
-                        <button id="save-success-settings-btn" class="btn btn-primary btn-large">
-                            💾 บันทึกการตั้งค่า
-                        </button>
+                        <div class="success-settings-layout">
+                            <!-- Controls Column (Left) -->
+                            <div class="success-controls-column">
+                                <!-- Card 1: Animation Style Selector with Custom Dropdown -->
+                                <div class="success-card">
+                                    <div class="success-card-title">
+                                        <span class="success-card-icon">🎨</span>
+                                        <div>
+                                            <h3>รูปแบบอนิเมชั่น</h3>
+                                            <small>เลือกรูปแบบจากทั้งหมด 30 สไตล์ (แสดง 10 รายการต่อมุมมอง เลื่อนขึ้น-ลงได้)</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="custom-success-dropdown" id="custom-success-dropdown">
+                                        <div class="custom-dropdown-trigger" id="custom-dropdown-trigger" tabindex="0" role="button" aria-haspopup="listbox">
+                                            <div class="dropdown-trigger-content">
+                                                <span class="trigger-icon" id="trigger-anim-icon">✨</span>
+                                                <span class="trigger-text" id="trigger-anim-text">1. เครื่องหมายยืนยันสำเร็จ</span>
+                                            </div>
+                                            <span class="dropdown-arrow">▼</span>
+                                        </div>
+                                        <div class="custom-dropdown-menu" id="custom-dropdown-menu" role="listbox">
+                                            <!-- Dynamically populated with max 10 visible items & scroll -->
+                                        </div>
+                                        <!-- Hidden select for full compatibility -->
+                                        <select id="success-animation-style" class="styled-select" style="display: none;"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2: Size & Colors -->
+                                <div class="success-card">
+                                    <div class="success-card-title">
+                                        <span class="success-card-icon">📐</span>
+                                        <div>
+                                            <h3>ขนาดและโทนสี</h3>
+                                            <small>ปรับสเกลขนาดและสีสันของเอฟเฟกต์ให้เข้ากับธีมร้านของคุณ</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Animation Size -->
+                                    <div class="success-field-group">
+                                        <div class="success-slider-label-row">
+                                            <label for="success-animation-size">ขนาดอนิเมชั่น</label>
+                                            <span class="range-value-display modern-badge" id="success-animation-size-value">100%</span>
+                                        </div>
+                                        <input type="range" id="success-animation-size" min="50" max="200" value="100" class="modern-range-slider">
+                                    </div>
+
+                                    <!-- Colors Row -->
+                                    <div class="modern-color-row">
+                                        <div class="modern-color-item">
+                                            <div class="color-picker-box" id="prim-color-preview" style="background-color: #28a745;">
+                                                <input type="color" id="success-animation-primary-color" value="#28a745">
+                                            </div>
+                                            <div class="color-text-wrap">
+                                                <label for="success-animation-primary-color">สีหลัก</label>
+                                                <span class="color-hex-tag" id="primary-hex-tag">#28a745</span>
+                                            </div>
+                                        </div>
+                                        <div class="modern-color-item">
+                                            <div class="color-picker-box" id="sec-color-preview" style="background-color: #ffffff;">
+                                                <input type="color" id="success-animation-secondary-color" value="#ffffff">
+                                            </div>
+                                            <div class="color-text-wrap">
+                                                <label for="success-animation-secondary-color">สีรอง</label>
+                                                <span class="color-hex-tag" id="secondary-hex-tag">#ffffff</span>
+                                            </div>
+                                        </div>
+                                        <div class="modern-color-item">
+                                            <div class="color-picker-box" id="text-color-preview" style="background-color: #ffffff;">
+                                                <input type="color" id="success-text-color" value="#ffffff">
+                                            </div>
+                                            <div class="color-text-wrap">
+                                                <label for="success-text-color">สีตัวอักษร</label>
+                                                <span class="color-hex-tag" id="text-hex-tag">#ffffff</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3: Text & Positioning -->
+                                <div class="success-card">
+                                    <div class="success-card-title">
+                                        <span class="success-card-icon">💬</span>
+                                        <div>
+                                            <h3>ข้อความและตำแหน่ง</h3>
+                                            <small>กำหนดข้อความแจ้งเตือน ขนาดฟอนต์ และพิกัดตำแหน่งแกน X / Y</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text Input -->
+                                    <div class="success-field-group">
+                                        <label for="success-animation-text">ข้อความแจ้งเตือน</label>
+                                        <input type="text" id="success-animation-text" placeholder="คัดลอกออเดอร์สำเร็จ" class="modern-text-field">
+                                    </div>
+
+                                    <!-- Text Size -->
+                                    <div class="success-field-group">
+                                        <div class="success-slider-label-row">
+                                            <label for="success-text-size">ขนาดตัวอักษร</label>
+                                            <span class="range-value-display modern-badge" id="success-text-size-value">22px</span>
+                                        </div>
+                                        <input type="range" id="success-text-size" min="8" max="48" value="22" class="modern-range-slider">
+                                    </div>
+
+                                    <!-- Position Controls -->
+                                    <div class="modern-position-panel">
+                                        <div class="position-panel-header">
+                                            <span>📍 ปรับตำแหน่งข้อความ</span>
+                                            <button type="button" class="btn-pos-reset" id="btn-pos-reset-quick">🔄 รีเซ็ตค่ากลาง</button>
+                                        </div>
+                                        <div class="modern-pos-content">
+                                            <div class="modern-pos-inputs">
+                                                <div class="pos-input-card">
+                                                    <span class="axis-label">แนวนอน (X)</span>
+                                                    <input type="number" id="success-text-offset-x" value="0" min="-150" max="150" class="pos-num-input">
+                                                </div>
+                                                <div class="pos-input-card">
+                                                    <span class="axis-label">แนวตั้ง (Y)</span>
+                                                    <input type="number" id="success-text-offset-y" value="55" min="-150" max="150" class="pos-num-input">
+                                                </div>
+                                            </div>
+                                            <div class="modern-dpad-wrap">
+                                                <button type="button" class="pos-dpad-btn up" id="pos-btn-up" title="ขึ้น">▲</button>
+                                                <div class="pos-dpad-row">
+                                                    <button type="button" class="pos-dpad-btn left" id="pos-btn-left" title="ซ้าย">◀</button>
+                                                    <button type="button" class="pos-dpad-btn center" id="pos-btn-center" title="ค่ากลาง">●</button>
+                                                    <button type="button" class="pos-dpad-btn right" id="pos-btn-right" title="ขวา">▶</button>
+                                                </div>
+                                                <button type="button" class="pos-dpad-btn down" id="pos-btn-down" title="ลง">▼</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview Column (Right - Sticky) -->
+                            <div class="success-preview-column">
+                                <div class="sticky-preview-wrapper">
+                                    <div class="preview-stage-header">
+                                        <div class="stage-indicator">
+                                            <span class="live-dot"></span>
+                                            <span>ตัวอย่างแสดงผลจริง</span>
+                                        </div>
+                                        <button type="button" class="btn-replay-preview" id="btn-replay-animation" title="คลิกเพื่อทดสอบเล่นอนิเมชั่นใหม่">
+                                            ▶️ เล่นซ้ำ
+                                        </button>
+                                    </div>
+
+                                    <!-- The Animation Stage Mockup -->
+                                    <div class="preview-modal-stage">
+                                        <div id="success-animation-preview-container" class="success-animation-preview"
+                                            onclick="showSuccessAnimation(this)" title="คลิกบนจอเพื่อเล่นอนิเมชั่นใหม่">
+                                        </div>
+                                    </div>
+
+                                    <!-- Info Bar -->
+                                    <div class="preview-info-card">
+                                        <div class="preview-info-row">
+                                            <span class="info-tag-label">สไตล์ที่เลือก:</span>
+                                            <span class="info-tag-val" id="active-style-label">1. เครื่องหมายยืนยันสำเร็จ</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Save Button Prominently Located Under Preview -->
+                                    <button id="save-success-settings-btn" class="btn btn-primary btn-save-success">
+                                        💾 บันทึกการตั้งค่าทั้งหมด
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- ===== END: NEW SUCCESS SETTINGS SUBMENU ===== -->
                     <div id="admin-sub-background" class="admin-sub-content">
