@@ -24624,9 +24624,20 @@ document.addEventListener('DOMContentLoaded', () => {
             closePreviewModal,
             applyBackgroundToPage
         };
-    
+    })();
+
+    // Initialize Background Settings on page load
+    setTimeout(() => {
+        if (typeof BackgroundSettings !== 'undefined' && BackgroundSettings.init) {
+            BackgroundSettings.init();
+        }
+    }, 500);
+    // =================================================
+    // ===== END: Background Settings Module =====
+    // =================================================
 
     // ===== START: MEMBER MANAGEMENT SYSTEM MODULE =====
+(() => {
     
     const ensureMemberMenuOrder = () => {
         if (appData && appData.menuOrder && Array.isArray(appData.menuOrder)) {
@@ -26126,23 +26137,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setupPublicMemberRegistration();
     };
 
-    // Call init when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMemberModule);
-    } else {
-        initMemberModule();
-    }
-    // ===== END: MEMBER MANAGEMENT SYSTEM MODULE =====
-
+    initMemberModule();
 })();
-
-    // Initialize Background Settings on page load
-    setTimeout(() => {
-        BackgroundSettings.init();
-    }, 500);
-    // =================================================
-    // ===== END: Background Settings Module =====
-    // =================================================
+    // ===== END: MEMBER MANAGEMENT SYSTEM MODULE =====
 
     // ===== Initialize Store System =====
     // เช็คว่ามีการเข้าผ่าน URL ร้านค้าหรือไม่
