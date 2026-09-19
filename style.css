@@ -30276,7 +30276,7 @@ body.dark-mode .credit-tab-btn {
     align-items: center;
     gap: 10px;
 }
-/* Public Member Register Modal */
+/* Public Member Register Modal Smooth Styling */
 #public-member-register-modal {
     display: none;
     position: fixed;
@@ -30286,8 +30286,8 @@ body.dark-mode .credit-tab-btn {
     width: 100vw;
     height: 100vh;
     background-color: rgba(15, 23, 42, 0.65) !important;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     justify-content: center;
     align-items: center;
     padding: 20px;
@@ -30297,20 +30297,147 @@ body.dark-mode .credit-tab-btn {
 #public-member-register-modal .modal-content {
     background: #ffffff !important;
     border-radius: 24px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.35) !important;
     max-width: 480px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 88vh;
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
-    padding: 30px 26px !important;
+    padding: 26px 24px 22px !important;
     animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     box-sizing: border-box;
 }
 
-@keyframes modalScaleIn {
-    from { opacity: 0; transform: scale(0.92) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+/* Sleek modern scrollbar */
+#public-member-register-modal .modal-content::-webkit-scrollbar {
+    width: 5px;
+}
+#public-member-register-modal .modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+#public-member-register-modal .modal-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 999px;
+}
+body.dark-mode #public-member-register-modal .modal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#public-member-register-modal .form-control {
+    height: 42px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    padding: 8px 14px !important;
+    font-size: 0.9rem !important;
+    background: #f8fafc !important;
+    transition: all 0.25s ease !important;
+    box-sizing: border-box !important;
+}
+
+#public-member-register-modal .form-control:focus {
+    border-color: #0284c7 !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+}
+
+/* Tag Inputs Styling */
+.tag-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInTag 0.2s ease-out;
+}
+
+@keyframes fadeInTag {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tag-input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.tag-hash-prefix {
+    position: absolute;
+    left: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.pub-reg-tag-input {
+    width: 100% !important;
+    padding-left: 28px !important;
+    text-transform: uppercase !important;
+    font-family: monospace, sans-serif !important;
+    letter-spacing: 0.8px;
+    font-weight: 600 !important;
+}
+
+.btn-remove-tag-row {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid #fee2e2;
+    background: #fef2f2;
+    color: #ef4444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-remove-tag-row:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    transform: scale(1.05);
+}
+
+.btn-add-tag-pill {
+    background: #f0f9ff;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-add-tag-pill:hover:not(:disabled) {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+}
+
+.btn-add-tag-pill:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f1f5f9;
+    color: #94a3b8;
+    border-color: #e2e8f0;
+}
+
+body.dark-mode #public-member-register-modal .form-control {
+    background: #1e1e38 !important;
+    border-color: #3f3f6e !important;
+    color: #f1f5f9 !important;
 }
 
 body.dark-mode #public-member-register-modal .modal-content {
@@ -30321,6 +30448,22 @@ body.dark-mode #public-member-register-modal .modal-content {
 
 body.dark-mode #public-member-register-modal label {
     color: #cbd5e1 !important;
+}
+
+body.dark-mode .btn-add-tag-pill {
+    background: rgba(2, 132, 199, 0.15);
+    color: #38bdf8;
+    border-color: rgba(2, 132, 199, 0.3);
+}
+
+body.dark-mode .btn-remove-tag-row {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+@keyframes modalScaleIn {
+    from { opacity: 0; transform: scale(0.92) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* ===== END: Member Management System Styles ===== */

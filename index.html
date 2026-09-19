@@ -41,7 +41,7 @@
         href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600&family=Chakra+Petch:wght@300;400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Inter:wght@500;600;700&family=Kanit:wght@300;400;500;600&family=Mali:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&family=Taviraj:wght@300;400;500;600&family=Trirong:wght@300;400;500;600&family=Lilita+One&family=Mitr:wght@400;500;600&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=member2.2">
+    <link rel="stylesheet" href="style.css?v=member2.3">
     <link rel="stylesheet" href="premium-feedback.css">
     <link rel="stylesheet" href="success-animations.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -6388,14 +6388,28 @@
                         <input type="text" id="pub-reg-lastname" class="form-control" placeholder="นามสกุล">
                     </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 14px;">
-                    <label for="pub-reg-phone" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">เบอร์โทรศัพท์</label>
-                    <input type="tel" id="pub-reg-phone" class="form-control" placeholder="08x-xxx-xxxx" autocomplete="tel">
-                </div>
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label for="pub-reg-tag" style="display: block; font-weight: 600; font-size: 0.86rem; margin-bottom: 6px; color: #334155;">🌾 Hay Day Player Tag (แท็กฟาร์ม)</label>
-                    <input type="text" id="pub-reg-tag" class="form-control" placeholder="เช่น LJV8U8QGU (ไม่ใส่ก็ได้)" style="text-transform: uppercase;">
-                    <small style="color: #94a3b8; font-size: 0.76rem; display: block; margin-top: 4px;">ใช้สำหรับยืนยันและเติมสินค้าในเกม Hay Day โดยอัตโนมัติ</small>
+                <!-- Dynamic Tags Section: Mandatory, max 10 tags -->
+                <div class="form-group tag-section-group" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin: 0; font-weight: 600; font-size: 0.86rem; color: #334155;">
+                            🌾 Hay Day Player Tag (แท็กฟาร์ม) <span style="color: #ef4444;">*</span>
+                            <span id="pub-reg-tag-counter" style="font-size: 0.76rem; font-weight: 600; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 10px; margin-left: 6px;">(1/10)</span>
+                        </label>
+                        <button type="button" id="btn-add-tag-field" class="btn-add-tag-pill" onclick="addNewTagInputRow()">
+                            <span>+ เพิ่มแท็ก</span>
+                        </button>
+                    </div>
+                    <div id="pub-reg-tags-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="tag-input-row" data-tag-row="1">
+                            <div class="tag-input-wrapper">
+                                <span class="tag-hash-prefix">#</span>
+                                <input type="text" class="form-control pub-reg-tag-input" placeholder="เช่น LJV8U8QGU" required style="text-transform: uppercase;">
+                            </div>
+                        </div>
+                    </div>
+                    <small style="color: #94a3b8; font-size: 0.75rem; display: block; margin-top: 6px;">
+                        * บังคับระบุแท็กอย่างน้อย 1 แท็ก (กด + เพิ่มได้สูงสุด 10 แท็ก)
+                    </small>
                 </div>
                 <div id="pub-reg-error" style="display: none; color: #ef4444; background: #fee2e2; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
                 <div id="pub-reg-success" style="display: none; color: #059669; background: #d1fae5; border-radius: 8px; padding: 10px 14px; font-size: 0.86rem; margin-bottom: 14px;"></div>
@@ -6434,10 +6448,73 @@
             }
         });
 
+        // Dynamic tag functions for Public Member Registration Modal
+        function addNewTagInputRow() {
+            const list = document.getElementById('pub-reg-tags-list');
+            if (!list) return;
+            const currentRows = list.querySelectorAll('.tag-input-row');
+            if (currentRows.length >= 10) return;
+            const nextIndex = currentRows.length + 1;
+            const newRow = document.createElement('div');
+            newRow.className = 'tag-input-row';
+            newRow.setAttribute('data-tag-row', nextIndex);
+            newRow.innerHTML = `
+                <div class="tag-input-wrapper">
+                    <span class="tag-hash-prefix">#</span>
+                    <input type="text" class="form-control pub-reg-tag-input" placeholder="แท็กฟาร์มที่ ${nextIndex}" style="text-transform: uppercase;">
+                </div>
+                <button type="button" class="btn-remove-tag-row" onclick="removeTagInputRow(this)" title="ลบแท็กนี้">✕</button>
+            `;
+            list.appendChild(newRow);
+            const inp = newRow.querySelector('input');
+            if (inp) inp.focus();
+            updateTagCounterBadge();
+        }
+
+        function removeTagInputRow(btn) {
+            const row = btn.closest('.tag-input-row');
+            if (row) {
+                row.remove();
+                updateTagCounterBadge();
+            }
+        }
+
+        function updateTagCounterBadge() {
+            const list = document.getElementById('pub-reg-tags-list');
+            const badge = document.getElementById('pub-reg-tag-counter');
+            const addBtn = document.getElementById('btn-add-tag-field');
+            if (!list) return;
+            const count = list.querySelectorAll('.tag-input-row').length;
+            if (badge) badge.textContent = `(${count}/10)`;
+            if (addBtn) {
+                addBtn.disabled = (count >= 10);
+                addBtn.style.opacity = count >= 10 ? '0.5' : '1';
+                addBtn.style.cursor = count >= 10 ? 'not-allowed' : 'pointer';
+            }
+        }
+
         // Global handlers for Public Member Registration Modal
         function openPublicMemberRegisterModal() {
             const modal = document.getElementById('public-member-register-modal');
             if (modal) {
+                // Reset tags list to 1 row
+                const tagsList = document.getElementById('pub-reg-tags-list');
+                if (tagsList) {
+                    tagsList.innerHTML = `
+                        <div class="tag-input-row" data-tag-row="1">
+                            <div class="tag-input-wrapper">
+                                <span class="tag-hash-prefix">#</span>
+                                <input type="text" class="form-control pub-reg-tag-input" placeholder="เช่น LJV8U8QGU" required style="text-transform: uppercase;">
+                            </div>
+                        </div>
+                    `;
+                    updateTagCounterBadge();
+                }
+                const errDiv = document.getElementById('pub-reg-error');
+                const succDiv = document.getElementById('pub-reg-success');
+                if (errDiv) { errDiv.style.display = 'none'; errDiv.textContent = ''; }
+                if (succDiv) { succDiv.style.display = 'none'; succDiv.textContent = ''; }
+
                 modal.style.display = 'flex';
                 const userField = document.getElementById('pub-reg-username');
                 if (userField) setTimeout(() => userField.focus(), 100);
@@ -6449,7 +6526,7 @@
         }
     </script>
 
-    <script src="script.js?v=member2.2" defer></script>
+    <script src="script.js?v=member2.3" defer></script>
 </body>
 
 </html>

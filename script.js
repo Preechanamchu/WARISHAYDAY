@@ -26032,8 +26032,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 const confirmPassword = document.getElementById('pub-reg-confirm-password')?.value;
                 const firstName = document.getElementById('pub-reg-firstname')?.value?.trim();
                 const lastName = document.getElementById('pub-reg-lastname')?.value?.trim();
-                const phone = document.getElementById('pub-reg-phone')?.value?.trim();
-                const tag = document.getElementById('pub-reg-tag')?.value?.trim();
+
+                // Collect Hay Day player tags (mandatory, 1 - 10)
+                const tagInputs = document.querySelectorAll('.pub-reg-tag-input');
+                const tags = [];
+                tagInputs.forEach(inp => {
+                    const val = inp.value.trim().replace(/^#/, '').toUpperCase();
+                    if (val) tags.push(val);
+                });
+
+                if (tags.length === 0) {
+                    if (errDiv) {
+                        errDiv.textContent = 'กรุณาระบุ Hay Day Player Tag (อย่างน้อย 1 แท็ก)';
+                        errDiv.style.display = 'block';
+                    }
+                    const firstInput = document.querySelector('.pub-reg-tag-input');
+                    if (firstInput) firstInput.focus();
+                    return;
+                }
 
                 if (!username || !password) {
                     if (errDiv) {
@@ -26081,8 +26097,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             password,
                             firstName,
                             lastName,
-                            phone,
-                            tag
+                            tags
                         })
                     });
 
