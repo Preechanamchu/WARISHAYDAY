@@ -996,15 +996,11 @@
                   - div นี้ถูกกำหนดใน style.css ให้เป็น grid 2 คอลัมน์
                 -->
                 <div class="login-page-buttons">
-                    <div class="login-buttons-row">
+                    <div class="login-buttons-row" style="grid-template-columns: 1fr;">
                         <button id="login-btn" class="btn btn-login-premium"
                             data-translate-key="loginBtn">
                             <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                             <span>เข้าสู่ระบบ</span>
-                        </button>
-                        <button id="btn-open-member-register" class="btn btn-register-member-premium" type="button" onclick="openPublicMemberRegisterModal()">
-                            <svg class="btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                            <span>สมัครสมาชิก</span>
                         </button>
                     </div>
                     <div class="login-sub-actions" style="margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
@@ -6878,9 +6874,6 @@
                 <button type="submit" id="cust-login-submit-btn" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">
                     <span>เข้าสู่ระบบ</span>
                 </button>
-                <div style="text-align: center; margin-top: 14px;">
-                    <a href="#" onclick="document.getElementById('customer-login-modal').style.display='none'; openPublicMemberRegisterModal(); return false;" style="color: #0284c7; text-decoration: none; font-size: 0.88rem; font-weight: 600;">ยังไม่มีบัญชี? สมัครสมาชิกที่นี่</a>
-                </div>
             </form>
         </div>
     </div>
