@@ -117,7 +117,7 @@ export async function authenticateRequest(request, env) {
   const decoded = await verifyJwt(token, secretKey);
 
   if (!decoded) {
-    return { error: 'Invalid or expired token.', status: 403 };
+    return { error: 'Invalid or expired token.', status: 401 };
   }
 
   return { user: decoded };

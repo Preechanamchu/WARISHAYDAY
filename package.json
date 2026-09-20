@@ -24,5 +24,8 @@
     "postgresql"
   ],
   "author": "MiniMax Agent",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.135.0"
+  }
 }

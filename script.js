@@ -1336,7 +1336,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchWithAuth = async (url, options = {}) => {
-        const token = localStorage.getItem('jwt_token');
+        let token = localStorage.getItem('jwt_token') || 
+                    localStorage.getItem('store_token') || 
+                    localStorage.getItem('authToken');
+
+        if (!token) {
+            try {
+                const storeSession = JSON.parse(sessionStorage.getItem('storeAdminSession') || '{}');
+                if (storeSession && storeSession.token) {
+                    token = storeSession.token;
+                }
+            } catch (_) {}
+        }
+
         const headers = {
             ...options.headers,
             'Content-Type': 'application/json',
@@ -1347,14 +1359,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const response = await fetch(url, { ...options, headers });
 
-        // ===== START: TOKEN EXPIRATION HANDLING =====
-        if (response.status === 401 || response.status === 403) {
-            // Token is invalid/expired
+        // ===== START: TOKEN EXPIRATION / AUTH HANDLING =====
+        if (response.status === 401) {
+            // Token is missing, invalid or expired
+            console.warn('fetchWithAuth: 401 Unauthorized for', url);
             Notify.warning('เซสชันหมดอายุ', 'กรุณาล็อกอินใหม่อีกครั้ง');
-            logout(); // This function already exists and handles cleanup
-            throw new Error('Invalid or expired token.'); // Stop further execution
+            if (typeof logout === 'function') logout();
+            const err = new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่อีกครั้ง');
+            err.isAuthHandled = true;
+            throw err;
         }
-        // ===== END: TOKEN EXPIRATION HANDLING =====
+
+        if (response.status === 403) {
+            // Permission denied: do not wipe session/logout
+            console.warn('fetchWithAuth: 403 Forbidden for', url);
+            let errMsg = 'คุณไม่มีสิทธิ์เข้าถึงส่วนนี้';
+            try {
+                const cloned = response.clone();
+                const errData = await cloned.json();
+                if (errData && errData.error) errMsg = errData.error;
+            } catch (_) {}
+            Notify.error('ไม่มีสิทธิ์เข้าถึง', errMsg);
+            const err = new Error(errMsg);
+            err.isAuthHandled = true;
+            throw err;
+        }
+        // ===== END: TOKEN EXPIRATION / AUTH HANDLING =====
 
         return response;
     };
@@ -21268,12 +21298,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (savedIsAdminLoggedIn) {
                 // กู้คืน session ของ Admin
                 const savedLoggedInUser = localStorage.getItem('loggedInUser');
-                if (savedLoggedInUser) {
-                    loggedInUser = JSON.parse(savedLoggedInUser);
-                    isAdminLoggedIn = true;
-                    await loadAdminData();
-                    switchView('adminPanel');
-                    renderAdminPanel();
+                const adminToken = localStorage.getItem('jwt_token') || localStorage.getItem('store_token') || localStorage.getItem('authToken');
+                if (savedLoggedInUser && adminToken) {
+                    try {
+                        loggedInUser = JSON.parse(savedLoggedInUser);
+                        isAdminLoggedIn = true;
+                        await loadAdminData();
+                        switchView('adminPanel');
+                        renderAdminPanel();
+                    } catch (e) {
+                        console.error('Failed to parse savedLoggedInUser:', e);
+                        localStorage.removeItem('isAdminLoggedIn');
+                        localStorage.removeItem('loggedInUser');
+                    }
+                } else if (savedLoggedInUser && !adminToken) {
+                    console.warn('Session restore: Admin user found but token is missing. Clearing stale session.');
+                    localStorage.removeItem('isAdminLoggedIn');
+                    localStorage.removeItem('loggedInUser');
                 }
             }
 
@@ -24869,7 +24910,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error('renderMemberDashboard error:', err);
-            Notify.error('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดแดชบอร์ดสมาชิกได้');
+            if (!err.isAuthHandled) {
+                Notify.error('เกิดข้อผิดพลาด', err.message || 'ไม่สามารถโหลดแดชบอร์ดสมาชิกได้');
+            }
         }
     };
 
@@ -25108,7 +25151,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('renderMemberList error:', err);
             if (skeleton) skeleton.style.display = 'none';
             if (errorState) errorState.style.display = 'block';
-            Notify.error('ข้อผิดพลาด', 'ไม่สามารถโหลดรายชื่อสมาชิกได้');
+            if (!err.isAuthHandled) {
+                Notify.error('ข้อผิดพลาด', err.message || 'ไม่สามารถโหลดรายชื่อสมาชิกได้');
+            }
         }
     };
 
@@ -25618,7 +25663,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error('renderCreditRequests error:', err);
-            Notify.error('ข้อผิดพลาด', 'ไม่สามารถโหลดคำขอเติมเครดิตได้');
+            if (!err.isAuthHandled) {
+                Notify.error('ข้อผิดพลาด', err.message || 'ไม่สามารถโหลดคำขอเติมเครดิตได้');
+            }
         }
     };
 
@@ -25921,7 +25968,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error('renderAuditLogs error:', err);
-            Notify.error('ข้อผิดพลาด', 'ไม่สามารถโหลด Audit Logs ได้');
+            if (!err.isAuthHandled) {
+                Notify.error('ข้อผิดพลาด', err.message || 'ไม่สามารถโหลด Audit Logs ได้');
+            }
         }
     };
 
@@ -26291,8 +26340,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('renderMemberRegistrations error:', err);
             tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-            if (typeof Notify !== 'undefined' && Notify.error) {
-                Notify.error('ข้อผิดพลาด', 'ไม่สามารถโหลดคำร้องสมัครสมาชิกได้');
+            if (!err.isAuthHandled && typeof Notify !== 'undefined' && Notify.error) {
+                Notify.error('ข้อผิดพลาด', err.message || 'ไม่สามารถโหลดคำร้องสมัครสมาชิกได้');
             }
         }
     };

@@ -1,5 +1,6 @@
 // functions/api/admin/credit-adjustment.js
 import { authenticateRequest } from '../_auth.js';
+import { hasMemberAdminAccess } from './_member-access.js';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -20,9 +21,9 @@ export async function onRequest(context) {
   }
 
   const user = auth.user;
-  // Super Admin only (or admin with member permission)
-  if (!user.isSuperAdmin && (!user.permissions || !user.permissions.member)) {
-    return new Response(JSON.stringify({ error: 'เฉพาะ Super Admin เท่านั้นที่สามารถปรับเครดิตได้' }), {
+  // Super Admin or admin with member permission
+  if (!hasMemberAdminAccess(user)) {
+    return new Response(JSON.stringify({ error: 'เฉพาะ Super Admin หรือผู้ดูแลระบบที่มีสิทธิ์เท่านั้นที่สามารถปรับเครดิตได้' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
     });

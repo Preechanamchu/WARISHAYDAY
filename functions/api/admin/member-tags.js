@@ -1,5 +1,6 @@
 // functions/api/admin/member-tags.js
 import { authenticateRequest } from '../_auth.js';
+import { hasMemberAdminAccess } from './_member-access.js';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -14,8 +15,8 @@ export async function onRequest(context) {
   }
 
   const user = auth.user;
-  if (!user.isSuperAdmin && (!user.permissions || !user.permissions.member)) {
-    return new Response(JSON.stringify({ error: 'คุณไม่มีสิทธิ์เข้าถึงข้อมูลสมาชิก' }), {
+  if (!hasMemberAdminAccess(user)) {
+    return new Response(JSON.stringify({ error: 'คุณไม่มีสิทธิ์จัดการแท็กสมาชิก' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
     });

@@ -1,5 +1,6 @@
 // functions/api/admin/member-audit-logs.js
 import { authenticateRequest } from '../_auth.js';
+import { hasMemberAdminAccess } from './_member-access.js';
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -13,7 +14,7 @@ export async function onRequestGet(context) {
   }
 
   const user = auth.user;
-  if (!user.isSuperAdmin && (!user.permissions || !user.permissions.member)) {
+  if (!hasMemberAdminAccess(user)) {
     return new Response(JSON.stringify({ error: 'คุณไม่มีสิทธิ์เข้าถึง Audit Logs' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },

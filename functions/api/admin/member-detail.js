@@ -1,6 +1,7 @@
 // functions/api/admin/member-detail.js
 import bcrypt from 'bcryptjs';
 import { authenticateRequest } from '../_auth.js';
+import { hasMemberAdminAccess } from './_member-access.js';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -15,7 +16,7 @@ export async function onRequest(context) {
   }
 
   const user = auth.user;
-  if (!user.isSuperAdmin && (!user.permissions || !user.permissions.member)) {
+  if (!hasMemberAdminAccess(user)) {
     return new Response(JSON.stringify({ error: 'คุณไม่มีสิทธิ์เข้าถึงข้อมูลสมาชิก' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
