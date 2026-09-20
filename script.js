@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ===== Utility: Escape HTML to prevent XSS =====
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     // ===== START: API Endpoint Configuration (Updated) =====
     // Configuration for API endpoints
     const API_SAVE_ENDPOINT = '/api/save-data';
